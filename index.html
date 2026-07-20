@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
-<meta name="theme-color" content="#FF6B9D" />
+<meta name="theme-color" content="#1FC8B8" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-<meta name="apple-mobile-web-app-title" content="Mi Día" />
-<meta name="application-name" content="Mi Día" />
-<link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23FF6B9D'/><stop offset='1' stop-color='%237B4BFF'/></linearGradient></defs><rect width='180' height='180' rx='40' fill='url(%23g)'/><text x='90' y='118' font-size='90' text-anchor='middle' font-family='system-ui'>✨</text></svg>" />
-<link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23FF6B9D'/><stop offset='1' stop-color='%237B4BFF'/></linearGradient></defs><rect width='100' height='100' rx='22' fill='url(%23g)'/><text x='50' y='68' font-size='55' text-anchor='middle' font-family='system-ui'>✨</text></svg>" />
-<title>Mi Día · Tu compañero diario</title>
+<meta name="apple-mobile-web-app-title" content="Mi Brújula" />
+<meta name="application-name" content="Mi Brújula" />
+<link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%231FC8B8'/><stop offset='1' stop-color='%230E8C86'/></linearGradient></defs><rect width='180' height='180' rx='40' fill='url(%23g)'/><text x='90' y='118' font-size='90' text-anchor='middle' font-family='system-ui'>✨</text></svg>" />
+<link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%231FC8B8'/><stop offset='1' stop-color='%230E8C86'/></linearGradient></defs><rect width='100' height='100' rx='22' fill='url(%23g)'/><text x='50' y='68' font-size='55' text-anchor='middle' font-family='system-ui'>✨</text></svg>" />
+<title>Mi Brújula · Tu compañero diario</title>
 <link rel="manifest" href="manifest.json" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,8 +22,8 @@
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
   :root {
-    --coral: #FF6B9D;
-    --purple: #7B4BFF;
+    --coral: #1FC8B8;
+    --purple: #0E8C86;
     --turquoise: #00D4C7;
     --yellow: #FFD23F;
     --mint: #8AE9C1;
@@ -32,8 +32,8 @@
     --slate: #5B5680;
     --cream: #FFF9F2;
     --white: #FFFFFF;
-    --shadow-soft: 0 8px 32px rgba(123, 75, 255, 0.08);
-    --shadow-pop: 0 12px 40px rgba(255, 107, 157, 0.18);
+    --shadow-soft: 0 8px 32px rgba(14, 140, 134, 0.08);
+    --shadow-pop: 0 12px 40px rgba(31, 200, 184, 0.18);
     --radius-lg: 24px;
     --radius-md: 16px;
     --radius-sm: 10px;
@@ -44,7 +44,7 @@
   html, body {
     font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     color: var(--navy);
-    background: linear-gradient(135deg, #FFE8F0 0%, #FFF3E0 40%, #E8FFFB 100%);
+    background: linear-gradient(135deg, #E3FFF8 0%, #FFF3E0 40%, #E8FFFB 100%);
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
   }
@@ -54,8 +54,8 @@
     position: fixed;
     inset: 0;
     background:
-      radial-gradient(circle at 15% 20%, rgba(255, 107, 157, 0.15), transparent 40%),
-      radial-gradient(circle at 85% 80%, rgba(123, 75, 255, 0.12), transparent 40%),
+      radial-gradient(circle at 15% 20%, rgba(31, 200, 184, 0.15), transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(14, 140, 134, 0.12), transparent 40%),
       radial-gradient(circle at 50% 50%, rgba(0, 212, 199, 0.08), transparent 50%);
     pointer-events: none;
     z-index: 0;
@@ -64,7 +64,7 @@
   .app { max-width: 1200px; margin: 0 auto; padding: 32px 24px 80px; position: relative; z-index: 1; }
 
   /* HEADER */
-  .header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px; flex-wrap: wrap; gap: 16px; }
+  .header { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 32px; gap: 10px; }
   .brand h1 {
     font-family: 'Fraunces', serif;
     font-weight: 800;
@@ -76,8 +76,7 @@
     background-clip: text;
     color: transparent;
   }
-  .brand p { color: var(--slate); margin-top: 8px; font-size: 15px; }
-  .brand p b { color: var(--navy); font-weight: 600; }
+  .brand p.motivational { color: var(--slate); margin-top: 6px; font-size: 15px; font-style: italic; }
   .streak {
     background: var(--white);
     padding: 14px 20px;
@@ -111,7 +110,7 @@
   .tab.active {
     color: var(--white);
     background: linear-gradient(135deg, var(--coral), var(--purple));
-    box-shadow: 0 6px 20px rgba(123, 75, 255, 0.3);
+    box-shadow: 0 6px 20px rgba(14, 140, 134, 0.3);
   }
 
   /* PANELS */
@@ -159,7 +158,7 @@
     transition: transform .15s, box-shadow .15s;
     white-space: nowrap;
   }
-  .btn:hover { transform: translateY(-2px); box-shadow: 0 16px 44px rgba(255, 107, 157, 0.25); }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 16px 44px rgba(31, 200, 184, 0.25); }
   .btn:active { transform: translateY(0); }
   .btn.secondary {
     background: #F0EDF7; color: var(--navy); box-shadow: none;
@@ -237,7 +236,7 @@
   .progress-wrap {
     display: flex; align-items: center; gap: 14px;
     padding: 16px 20px;
-    background: linear-gradient(135deg, #FFF3E0, #FFE8F0);
+    background: linear-gradient(135deg, #FFF3E0, #E3FFF8);
     border-radius: var(--radius-md);
     margin-bottom: 20px;
   }
@@ -268,8 +267,8 @@
     content: ''; position: absolute; inset: 0;
     background: radial-gradient(circle at 100% 0%, rgba(255,255,255,0.25), transparent 60%);
   }
-  .metric.pink { background: linear-gradient(135deg, #FF6B9D, #FF8DA1); }
-  .metric.purple { background: linear-gradient(135deg, #7B4BFF, #A688FF); }
+  .metric.pink { background: linear-gradient(135deg, #1FC8B8, #5DDCCB); }
+  .metric.purple { background: linear-gradient(135deg, #0E8C86, #3AA79E); }
   .metric.teal { background: linear-gradient(135deg, #00D4C7, #8AE9C1); }
   .metric.orange { background: linear-gradient(135deg, #FFB88C, #FFD23F); color: var(--navy); }
   .metric-label { font-size: 12px; font-weight: 600; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.05em; }
@@ -401,8 +400,8 @@
   <!-- HEADER -->
   <header class="header">
     <div class="brand">
-      <h1>Mi Día</h1>
-      <p>Hola 👋 Hoy es <b id="todayLabel">—</b></p>
+      <h1>🌠 Mi Brújula</h1>
+      <p class="motivational">Todo es posible, sigue trabajando por ello</p>
     </div>
     <div class="streak"><span class="dot"></span><span id="streakText">Empezando de a poquitos</span></div>
   </header>
@@ -438,6 +437,7 @@
           <option value="trabajo">💼 Trabajo</option>
           <option value="casa">🏠 Casa</option>
           <option value="salud">💚 Salud</option>
+          <option value="ninos">🧒 Niños</option>
           <option value="ideas">💡 Ideas</option>
         </select>
         <button class="btn" id="addTaskBtn">Agregar</button>
@@ -833,6 +833,26 @@ function loadState() {
     state.payments = seedPayments();
     saveState();
   }
+  // migracion: agrega pagos detectados en la libreta que faltaban (una sola vez)
+  if (!state.paymentsV2Added) {
+    const extras = [
+      { name: 'TC Latam', cat: 'tarjetas' },
+      { name: 'Crédito 2', cat: 'creditos' },
+      { name: 'Cuota casa', cat: 'creditos' },
+      { name: 'Celular', cat: 'servicios' },
+      { name: 'Medicina prepagada', cat: 'otros' },
+      { name: 'Salud mamá', cat: 'otros' },
+      { name: 'Apoyo mamá', cat: 'otros' }
+    ];
+    const existingNames = state.payments.map(p => p.name.toLowerCase().trim());
+    extras.forEach(ex => {
+      if (!existingNames.includes(ex.name.toLowerCase())) {
+        state.payments.push({ id: uid(), name: ex.name, cat: ex.cat, amount: 0, day: 1, paid: false });
+      }
+    });
+    state.paymentsV2Added = true;
+    saveState();
+  }
   // seed de listas de mercado
   if (!state.market || Object.keys(state.market).length === 0) {
     const seeds = seedMarket();
@@ -927,11 +947,6 @@ const todayISO = () => new Date().toISOString().slice(0, 10);
    HEADER
    ======================== */
 function updateHeader() {
-  const d = new Date();
-  const opts = { weekday: 'long', day: 'numeric', month: 'long' };
-  const label = d.toLocaleDateString('es-CO', opts);
-  document.getElementById('todayLabel').textContent = label.charAt(0).toUpperCase() + label.slice(1);
-
   const done = state.tasks.filter(t => t.done && t.date === todayISO()).length;
   const streakEl = document.getElementById('streakText');
   if (done === 0) streakEl.textContent = 'Vamos con calma, un paso a la vez 🌱';
@@ -961,6 +976,7 @@ const CAT_TASK = {
   trabajo:  { emoji: '💼', name: 'Trabajo' },
   casa:     { emoji: '🏠', name: 'Casa' },
   salud:    { emoji: '💚', name: 'Salud' },
+  ninos:    { emoji: '🧒', name: 'Niños' },
   ideas:    { emoji: '💡', name: 'Ideas' }
 };
 
@@ -1058,15 +1074,15 @@ function deleteTask(id) {
    EXPENSES
    ======================== */
 const CAT_EXP = {
-  mercado:     { emoji: '🛒', name: 'Mercado',    color: '#FF6B9D' },
+  mercado:     { emoji: '🛒', name: 'Mercado',    color: '#1FC8B8' },
   comida:      { emoji: '🍽️', name: 'Comida',     color: '#FFB88C' },
-  transporte:  { emoji: '🚗', name: 'Transporte', color: '#7B4BFF' },
+  transporte:  { emoji: '🚗', name: 'Transporte', color: '#0E8C86' },
   ocio:        { emoji: '🎬', name: 'Ocio',       color: '#00D4C7' },
   salud:       { emoji: '🏥', name: 'Salud',      color: '#8AE9C1' },
   ropa:        { emoji: '👕', name: 'Ropa',       color: '#FFD23F' },
-  hogar:       { emoji: '🏠', name: 'Hogar',      color: '#A688FF' },
+  hogar:       { emoji: '🏠', name: 'Hogar',      color: '#3AA79E' },
   educacion:   { emoji: '📚', name: 'Educación',  color: '#4EC5D1' },
-  regalos:     { emoji: '🎁', name: 'Regalos',    color: '#FF8DA1' },
+  regalos:     { emoji: '🎁', name: 'Regalos',    color: '#5DDCCB' },
   otros:       { emoji: '💡', name: 'Otros',      color: '#5B5680' }
 };
 
@@ -1147,9 +1163,9 @@ function formatDate(iso) {
    MONTHLY PAYMENTS
    ======================== */
 const CAT_PAY = {
-  tarjetas:      { emoji: '💳', name: 'Tarjetas de crédito', cls: 'cat-tarjetas', color: '#FF6B9D' },
+  tarjetas:      { emoji: '💳', name: 'Tarjetas de crédito', cls: 'cat-tarjetas', color: '#1FC8B8' },
   servicios:     { emoji: '🏠', name: 'Servicios del hogar', cls: 'cat-servicios', color: '#4EC5D1' },
-  creditos:      { emoji: '🏦', name: 'Créditos',            cls: 'cat-creditos', color: '#7B4BFF' },
+  creditos:      { emoji: '🏦', name: 'Créditos',            cls: 'cat-creditos', color: '#0E8C86' },
   suscripciones: { emoji: '📱', name: 'Suscripciones',       cls: 'cat-suscripciones', color: '#00D4C7' },
   colegio:       { emoji: '🎓', name: 'Colegio niños',       cls: 'cat-colegio', color: '#FFD23F' },
   otros:         { emoji: '✨', name: 'Otros',               cls: 'cat-otros', color: '#5B5680' }
@@ -1547,7 +1563,7 @@ function renderDashboard() {
         backgroundColor: (ctx) => {
           const c = ctx.chart.ctx;
           const g = c.createLinearGradient(0, 0, 0, 250);
-          g.addColorStop(0, '#FF6B9D'); g.addColorStop(1, '#7B4BFF');
+          g.addColorStop(0, '#1FC8B8'); g.addColorStop(1, '#0E8C86');
           return g;
         },
         borderRadius: 10, borderSkipped: false, maxBarThickness: 42
@@ -1624,6 +1640,7 @@ function guessTaskCat(t) {
   if (/trabajo|reuni[oó]n|jefe|cliente|correo|email|informe|oficina/.test(t)) return 'trabajo';
   if (/limpiar|lavar|cocina|arreglar|casa|hogar|planchar|barrer/.test(t)) return 'casa';
   if (/salud|m[eé]dico|cita|ejercicio|gym|caminar|medicina/.test(t)) return 'salud';
+  if (/ni[ñn]o|hijo|hija|colegio|jard[ií]n|pediatra|tarea escolar/.test(t)) return 'ninos';
   if (/idea|proyecto|pensar|anotar|planear/.test(t)) return 'ideas';
   return 'personal';
 }
@@ -2105,7 +2122,7 @@ async function loadUpcomingEvents() {
         : d.toLocaleDateString('es-CO', { day: 'numeric', month: 'short' });
       return `
         <div class="item">
-          <div style="width:40px;height:40px;border-radius:12px;background:#7B4BFF22;display:grid;place-items:center;font-size:18px;flex-shrink:0;">📅</div>
+          <div style="width:40px;height:40px;border-radius:12px;background:#0E8C8622;display:grid;place-items:center;font-size:18px;flex-shrink:0;">📅</div>
           <div class="item-body">
             <div class="item-title">${escapeHTML(ev.summary || '(sin título)')}</div>
             <div class="item-meta"><span>${when}</span></div>

@@ -1,12 +1,12 @@
 {
-  "name": "Mi Día",
-  "short_name": "Mi Día",
-  "description": "Tu compañero diario: tareas, gastos, pagos y mercado.",
+  "name": "Mi Brújula",
+  "short_name": "Mi Brújula",
+  "description": "Todo es posible, sigue trabajando por ello: tareas, gastos, pagos y mercado.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#FFF3E0",
-  "theme_color": "#FF6B9D",
+  "theme_color": "#1FC8B8",
   "orientation": "portrait",
   "icons": [
     { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
