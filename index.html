@@ -415,6 +415,7 @@
     <button class="tab" data-tab="mercado">🛒 Mercado</button>
     <button class="tab" data-tab="dashboard">📊 Dashboard</button>
     <button class="tab" data-tab="captura">⚡ Rápido</button>
+    <button class="tab" data-tab="viaje">🧭 Control de Viajes</button>
   </nav>
 
   <!-- ===================== TAREAS ===================== -->
@@ -709,48 +710,21 @@
     </div>
 
     <div class="card">
-      <h2>🎙️ Notas de voz</h2>
-      <p class="subtitle">Graba tu voz, la transcribo automáticamente y la puedes convertir en tarea o gasto con un toque.</p>
+      <h2>🔗 Sincronizar con Luttia (Telegram)</h2>
+      <p class="subtitle">Conecta con tu asistente de Telegram: lo que registres ahí (tareas, gastos, pagos, mercado) llega aquí, y lo que agregues aquí se guarda también en la misma hoja que usa Luttia.</p>
 
+      <div class="input-row">
+        <input class="input" id="syncUrl" type="text" placeholder="URL de tu n8n (ej: https://n8n.tudominio.com)" style="flex: 2;" />
+      </div>
+      <div class="input-row">
+        <input class="input" id="syncKey" type="password" placeholder="Clave secreta (Header Auth de n8n)" style="flex: 2;" />
+        <button class="btn secondary" id="syncSaveBtn">💾 Guardar</button>
+      </div>
       <div class="top-actions">
-        <button class="btn" id="voiceRecordBtn">🎙️ Grabar nota de voz</button>
+        <button class="btn" id="syncPullBtn">🔄 Sincronizar ahora</button>
       </div>
-      <div id="voiceStatus" style="margin-top: 10px;"></div>
-      <div id="voiceList" style="margin-top: 14px;"></div>
-      <p class="note-small" style="font-size:12px; color:var(--slate); margin-top:10px;">La transcripción usa el reconocimiento de voz de Chrome (envía el audio a Google para procesarlo, necesita internet). El audio grabado se guarda solo en este celular.</p>
-    </div>
-
-    <div class="card">
-      <h2>📅 Google Calendar</h2>
-      <p class="subtitle">Conecta tu calendario para ver tus próximos eventos y agregar cumpleaños o recordatorios sin salir de la app.</p>
-
-      <div id="calDisconnected">
-        <button class="btn" id="calConnectBtn">🔗 Conectar Google Calendar</button>
-        <p class="note-small" style="font-size:12px; color:var(--slate); margin-top:10px;">Se abre una ventana de Google para darle permiso a Mi Día de leer y crear eventos en tu calendario. La conexión dura mientras la pestaña esté abierta; la próxima vez que entres deberás conectar de nuevo.</p>
-      </div>
-
-      <div id="calConnected" style="display:none;">
-        <div class="top-actions">
-          <span class="status-tag status-paid" style="align-self:center;">🟢 Conectado</span>
-          <button class="btn secondary" id="calRefreshBtn">🔄 Actualizar</button>
-        </div>
-
-        <h3 style="margin-top:16px; font-size:15px; font-weight:700;">Próximos eventos</h3>
-        <div id="calEventList" style="margin-top:8px;"></div>
-
-        <h3 style="margin-top:20px; font-size:15px; font-weight:700;">Agregar evento o cumpleaños</h3>
-        <div class="input-row" style="margin-top:8px;">
-          <input class="input" id="calTitle" type="text" placeholder="Ej: Cumpleaños de Juan" style="flex: 2;" />
-          <input class="input" id="calDate" type="date" style="flex: 0 1 160px;" />
-        </div>
-        <div class="input-row">
-          <label class="chip" style="cursor:pointer;">
-            <input type="checkbox" id="calYearly" style="margin-right:6px;" />Se repite cada año (cumpleaños)
-          </label>
-          <button class="btn" id="calAddBtn">+ Agregar al calendario</button>
-        </div>
-        <div id="calAddStatus" style="margin-top:8px;"></div>
-      </div>
+      <div id="syncStatus" style="margin-top: 10px; font-size: 13px; color: var(--slate);"></div>
+      <p class="note-small" style="font-size:12px; color:var(--slate); margin-top:10px;">La clave se guarda solo en este celular (nunca queda en el código de la app). Debes crear una credencial "Header Auth" con el nombre <b>X-Brujula-Key</b> en los nodos webhook de tu flujo de n8n, con este mismo valor secreto.</p>
     </div>
 
     <div class="card">
@@ -764,6 +738,55 @@
       </div>
       <p class="subtitle" style="margin-top: 12px; margin-bottom: 0;">El respaldo es un archivo <b>.json</b> con tus tareas, gastos, pagos y listas. Restaurar reemplaza los datos actuales por los del archivo.</p>
     </div>
+  </section>
+
+  <!-- ===================== VIAJE PANAMA ===================== -->
+  <section class="panel" id="panel-viaje">
+    <div class="card">
+      <h2>🧭 Centro de Control de Viajes</h2>
+      <p class="subtitle">Viaje a Panamá · Familia: Tati, John, Nicolás, Esteban y Maximiliano.</p>
+
+      <div class="metrics" style="margin-bottom: 20px;">
+        <div class="metric pink">
+          <div class="metric-label">Total items</div>
+          <div class="metric-value" id="travTotal">0</div>
+          <div class="metric-hint" id="travPct">0% listo</div>
+        </div>
+        <div class="metric teal">
+          <div class="metric-label">Ya listos</div>
+          <div class="metric-value" id="travDone">0</div>
+          <div class="metric-hint">Sigue así ✈️</div>
+        </div>
+        <div class="metric purple">
+          <div class="metric-label">Faltan</div>
+          <div class="metric-value" id="travPending">0</div>
+          <div class="metric-hint">Revisa antes de salir</div>
+        </div>
+      </div>
+
+      <div class="input-row">
+        <input class="input" id="travItem" type="text" placeholder="Artículo (ej: Pasaportes)" style="flex: 2;" />
+        <select class="select" id="travCat" style="flex: 0 1 200px;"></select>
+      </div>
+      <div class="input-row">
+        <select class="select" id="travOwner" style="flex: 0 1 160px;">
+          <option>Familia</option><option>Tati</option><option>John</option><option>Nicolás</option><option>Esteban</option><option>Maximiliano</option><option>Niños</option>
+        </select>
+        <select class="select" id="travPrio" style="flex: 0 1 170px;">
+          <option>Imprescindible</option><option>Importante</option><option>Opcional</option>
+        </select>
+        <button class="btn" id="addTravBtn">Agregar</button>
+      </div>
+
+      <input class="input" id="travSearch" type="text" placeholder="Buscar artículo o responsable..." style="margin-top: 10px;" />
+    </div>
+
+    <div class="card" id="travCriticalCard" style="display:none;">
+      <h2>🚨 No olvidar (imprescindibles)</h2>
+      <div id="travCritical"></div>
+    </div>
+
+    <div id="travCards"></div>
   </section>
 
 </div>
@@ -821,7 +844,8 @@ let state = {
   payments: [],
   market: null,
   activeList: null,
-  monthResetAt: null
+  monthResetAt: null,
+  travel: []
 };
 
 function loadState() {
@@ -864,6 +888,13 @@ function loadState() {
   }
   if (!state.activeList || !state.market[state.activeList]) {
     state.activeList = Object.keys(state.market)[0];
+  }
+  // seed de checklist de viaje a Panama (una sola vez)
+  if (!state.travel) state.travel = [];
+  if (!state.travelSeeded) {
+    state.travel = state.travel.concat(seedTravel());
+    state.travelSeeded = true;
+    saveState();
   }
 }
 function saveState() {
@@ -945,6 +976,93 @@ const fmt = (n) => new Intl.NumberFormat('es-CO', { style: 'currency', currency:
 const todayISO = () => new Date().toISOString().slice(0, 10);
 
 /* ========================
+   SINCRONIZACION CON LUTTIA (n8n)
+   ======================== */
+const SYNC_CONFIG_KEY = 'miDiaSyncConfig';
+const SYNC_HEADER = 'X-Brujula-Key';
+
+function loadSyncConfig() {
+  try {
+    const raw = localStorage.getItem(SYNC_CONFIG_KEY);
+    return raw ? JSON.parse(raw) : { url: '', key: '' };
+  } catch (e) { return { url: '', key: '' }; }
+}
+function saveSyncConfig(cfg) {
+  try { localStorage.setItem(SYNC_CONFIG_KEY, JSON.stringify(cfg)); } catch (e) {}
+}
+function syncBaseUrl() {
+  const cfg = loadSyncConfig();
+  return (cfg.url || '').replace(/\/+$/, '');
+}
+function syncHeaders() {
+  const cfg = loadSyncConfig();
+  const h = { 'Content-Type': 'application/json' };
+  if (cfg.key) h[SYNC_HEADER] = cfg.key;
+  return h;
+}
+function syncConfigured() {
+  const cfg = loadSyncConfig();
+  return !!(cfg.url && cfg.key);
+}
+
+// Envia una accion a n8n en segundo plano; si falla, no interrumpe el uso local de la app.
+async function syncPush(action, data) {
+  if (!syncConfigured()) return;
+  try {
+    await fetch(syncBaseUrl() + '/webhook/sincronizar-brujula/action', {
+      method: 'POST',
+      headers: syncHeaders(),
+      body: JSON.stringify({ action, data })
+    });
+  } catch (e) {
+    console.warn('No se pudo sincronizar con Luttia:', e);
+  }
+}
+
+async function syncPull() {
+  const statusEl = document.getElementById('syncStatus');
+  if (!syncConfigured()) {
+    statusEl.innerHTML = '<span style="color:#C82346;">Falta guardar la URL y la clave antes de sincronizar.</span>';
+    return;
+  }
+  statusEl.innerHTML = '⏳ Sincronizando con Luttia...';
+  try {
+    const res = await fetch(syncBaseUrl() + '/webhook/sincronizar-brujula/data', { headers: syncHeaders() });
+    if (!res.ok) throw new Error('Respuesta ' + res.status + ' del servidor');
+    const data = await res.json();
+    if (data.tasks) state.tasks = data.tasks;
+    if (data.expenses) state.expenses = data.expenses;
+    if (data.payments) state.payments = data.payments;
+    if (data.market) state.market = data.market;
+    if (data.activeList && state.market[data.activeList]) state.activeList = data.activeList;
+    else if (!state.activeList || !state.market[state.activeList]) state.activeList = Object.keys(state.market)[0];
+    saveState();
+    renderTasks(); renderExpenses(); renderPayments(); renderMarket(); updateHeader();
+    const now = new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
+    statusEl.innerHTML = `<span style="color:#0B8556;">✅ Sincronizado a las ${now}.</span>`;
+  } catch (e) {
+    statusEl.innerHTML = `<span style="color:#C82346;">⚠️ No se pudo sincronizar: ${escapeHTML(e.message || 'error de red')}. Revisa la URL, la clave y que el flujo este activo en n8n.</span>`;
+  }
+}
+
+(function initSyncUI() {
+  const cfg = loadSyncConfig();
+  const urlEl = document.getElementById('syncUrl');
+  const keyEl = document.getElementById('syncKey');
+  if (urlEl) urlEl.value = cfg.url || '';
+  if (keyEl) keyEl.value = cfg.key || '';
+  document.getElementById('syncSaveBtn').addEventListener('click', () => {
+    const url = urlEl.value.trim();
+    const key = keyEl.value.trim();
+    saveSyncConfig({ url, key });
+    document.getElementById('syncStatus').innerHTML = '<span style="color:#0B8556;">✅ Configuracion guardada en este celular.</span>';
+  });
+  document.getElementById('syncPullBtn').addEventListener('click', syncPull);
+  // Si ya hay URL y clave guardadas, sincroniza sola al abrir la app (sin que haga falta tocar el boton).
+  if (syncConfigured()) syncPull();
+})();
+
+/* ========================
    HEADER
    ======================== */
 function updateHeader() {
@@ -956,6 +1074,136 @@ function updateHeader() {
 }
 
 /* ========================
+   VIAJE PANAMA (checklist)
+   ======================== */
+const CAT_TRAVEL = {
+  documentos: { emoji: '📄', name: 'Documentos' },
+  medicamentos: { emoji: '💊', name: 'Medicamentos' },
+  playa: { emoji: '🏖️', name: 'Playa' },
+  electronicos: { emoji: '🔌', name: 'Electrónicos' },
+  checklist: { emoji: '📋', name: 'Checklist antes de salir' },
+  ropa: { emoji: '👕', name: 'Ropa' },
+  aseo: { emoji: '🧴', name: 'Aseo personal' },
+  compras: { emoji: '🛒', name: 'Compras pendientes' }
+};
+
+function seedTravel() {
+  const mk = (cat, text, owner, priority) => ({ id: uid(), cat, text, owner, priority, done: false });
+  return [
+    mk('documentos', 'Pasaportes', 'Familia', 'Imprescindible'),
+    mk('documentos', 'Seguros', 'Familia', 'Imprescindible'),
+    mk('documentos', 'Registros civiles', 'Familia', 'Imprescindible'),
+    mk('documentos', 'Tarjetas vacunales de los niños', 'Niños', 'Imprescindible'),
+    mk('medicamentos', 'Eutirox', 'Tati', 'Imprescindible'),
+    mk('medicamentos', 'Medicamentos de John', 'John', 'Imprescindible'),
+    mk('medicamentos', 'Dolex Niños', 'Niños', 'Importante'),
+    mk('playa', 'Colchón inflable', 'Familia', 'Imprescindible'),
+    mk('playa', 'Flotadores', 'Niños', 'Importante'),
+    mk('electronicos', 'Cargadores de celular', 'Familia', 'Imprescindible'),
+    mk('electronicos', 'Tablet', 'Familia', 'Importante'),
+    mk('electronicos', 'Palo para selfies', 'Familia', 'Opcional'),
+    mk('checklist', 'Gafas', 'Familia', 'Importante')
+  ];
+}
+
+function addTravelItem() {
+  const input = document.getElementById('travItem');
+  const text = input.value.trim();
+  if (!text) return;
+  const cat = document.getElementById('travCat').value;
+  const owner = document.getElementById('travOwner').value;
+  const priority = document.getElementById('travPrio').value;
+  state.travel.push({ id: uid(), cat, text, owner, priority, done: false });
+  input.value = '';
+  saveState();
+  renderTravel();
+}
+
+function toggleTravelItem(id) {
+  const it = state.travel.find(x => x.id === id);
+  if (!it) return;
+  it.done = !it.done;
+  saveState();
+  renderTravel();
+  if (it.done) celebrate('¡Listo para el viaje! ✈️');
+}
+
+function deleteTravelItem(id) {
+  state.travel = state.travel.filter(x => x.id !== id);
+  saveState();
+  renderTravel();
+}
+
+function renderTravel() {
+  const catSel = document.getElementById('travCat');
+  if (catSel && !catSel.dataset.filled) {
+    catSel.innerHTML = Object.entries(CAT_TRAVEL).map(([k, v]) => `<option value="${k}">${v.emoji} ${v.name}</option>`).join('');
+    catSel.dataset.filled = '1';
+  }
+
+  const q = (document.getElementById('travSearch').value || '').toLowerCase();
+  const items = state.travel || [];
+  const total = items.length;
+  const done = items.filter(i => i.done).length;
+  document.getElementById('travTotal').textContent = total;
+  document.getElementById('travDone').textContent = done;
+  document.getElementById('travPending').textContent = total - done;
+  document.getElementById('travPct').textContent = (total ? Math.round(done * 100 / total) : 0) + '% listo';
+
+  const critical = items.filter(i => i.priority === 'Imprescindible' && !i.done);
+  const critCard = document.getElementById('travCriticalCard');
+  const critEl = document.getElementById('travCritical');
+  if (critical.length) {
+    critCard.style.display = 'block';
+    critEl.innerHTML = critical.map(i => `
+      <div class="item">
+        <div class="item-body">
+          <div class="item-title">${escapeHTML(i.text)}</div>
+          <div class="item-meta"><span>${escapeHTML(i.owner)}</span><span>${CAT_TRAVEL[i.cat] ? CAT_TRAVEL[i.cat].emoji + ' ' + CAT_TRAVEL[i.cat].name : ''}</span></div>
+        </div>
+      </div>
+    `).join('');
+  } else {
+    critCard.style.display = 'none';
+  }
+
+  const wrap = document.getElementById('travCards');
+  let html = '';
+  Object.keys(CAT_TRAVEL).forEach(cat => {
+    const catItems = items.filter(i => i.cat === cat && (!q || (i.text + ' ' + i.owner).toLowerCase().includes(q)));
+    if (!catItems.length && q) return;
+    const prioClass = (p) => p === 'Imprescindible' ? 'status-late' : p === 'Importante' ? 'status-pending' : 'status-paid';
+    html += `<div class="card">
+      <h2 style="font-size:16px;">${CAT_TRAVEL[cat].emoji} ${CAT_TRAVEL[cat].name}</h2>
+      ${catItems.length ? catItems.map(i => `
+        <div class="item ${i.done ? 'done' : ''}" data-id="${i.id}">
+          <label style="display:flex; align-items:center; gap:10px; flex:1; cursor:pointer;">
+            <input type="checkbox" data-action="trav-toggle" ${i.done ? 'checked' : ''} />
+            <div class="item-body">
+              <div class="item-title">${escapeHTML(i.text)}</div>
+              <div class="item-meta"><span>${escapeHTML(i.owner)}</span><span class="status-tag ${prioClass(i.priority)}">${i.priority}</span></div>
+            </div>
+          </label>
+          <button class="del-btn" data-action="trav-del">✕</button>
+        </div>
+      `).join('') : `<div class="empty"><span class="empty-emoji">🧳</span>Sin artículos en esta categoría.</div>`}
+    </div>`;
+  });
+  wrap.innerHTML = html;
+
+  wrap.querySelectorAll('.item').forEach(el => {
+    const id = el.dataset.id;
+    const chk = el.querySelector('[data-action="trav-toggle"]');
+    if (chk) chk.addEventListener('change', () => toggleTravelItem(id));
+    const del = el.querySelector('[data-action="trav-del"]');
+    if (del) del.addEventListener('click', () => deleteTravelItem(id));
+  });
+}
+
+document.getElementById('addTravBtn').addEventListener('click', addTravelItem);
+document.getElementById('travSearch').addEventListener('input', renderTravel);
+
+/* ========================
    TABS
    ======================== */
 document.querySelectorAll('.tab').forEach(tab => {
@@ -965,6 +1213,7 @@ document.querySelectorAll('.tab').forEach(tab => {
     tab.classList.add('active');
     document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
     if (tab.dataset.tab === 'dashboard') renderDashboard();
+    if (tab.dataset.tab === 'viaje') renderTravel();
   });
 });
 
@@ -998,11 +1247,13 @@ function addTask() {
   const cat = document.getElementById('taskCat').value;
   const title = input.value.trim();
   if (!title) return;
-  state.tasks.unshift({ id: uid(), title, cat, done: false, starred: false, date: todayISO() });
+  const newTask = { id: uid(), title, cat, done: false, starred: false, date: todayISO() };
+  state.tasks.unshift(newTask);
   input.value = '';
   saveState();
   renderTasks();
   updateHeader();
+  syncPush('add_task', newTask);
 }
 
 function renderTasks() {
@@ -1054,6 +1305,7 @@ function toggleTask(id) {
   saveState();
   renderTasks();
   updateHeader();
+  syncPush('toggle_task', { id: t.id, done: t.done });
   const today = todayISO();
   const total = state.tasks.filter(x => x.date === today).length;
   const done = state.tasks.filter(x => x.date === today && x.done).length;
@@ -1095,11 +1347,13 @@ function addExpense() {
   const cat = document.getElementById('expCat').value;
   const date = document.getElementById('expDate').value || todayISO();
   if (!desc || !amount || amount <= 0) return;
-  state.expenses.unshift({ id: uid(), desc, amount, cat, date });
+  const newExpense = { id: uid(), desc, amount, cat, date };
+  state.expenses.unshift(newExpense);
   document.getElementById('expDesc').value = '';
   document.getElementById('expAmount').value = '';
   saveState();
   renderExpenses();
+  syncPush('add_expense', newExpense);
 }
 
 function renderExpenses() {
@@ -1275,6 +1529,7 @@ function togglePayment(id) {
   p.paid = !p.paid;
   p.paidAt = p.paid ? todayISO() : null;
   saveState(); renderPayments();
+  syncPush('toggle_payment', { name: p.name, paid: p.paid });
   const total = state.payments.length;
   const paid = state.payments.filter(x => x.paid).length;
   if (total > 0 && paid === total) celebrate('¡Mes cuadrado! 🏆');
@@ -1399,11 +1654,13 @@ function addMktItem() {
   const name = document.getElementById('mktItem').value.trim();
   const qty = document.getElementById('mktQty').value.trim();
   if (!name) return;
-  list.items.push({ id: uid(), name, qty, done: false });
+  const newItem = { id: uid(), name, qty, done: false };
+  list.items.push(newItem);
   document.getElementById('mktItem').value = '';
   document.getElementById('mktQty').value = '';
   saveState();
   renderMarket();
+  syncPush('add_market', { id: newItem.id, product: newItem.name, quantity: newItem.qty, list: list.name });
 }
 
 function buildMarketText() {
@@ -1469,6 +1726,7 @@ function toggleMkt(id) {
   if (!item) return;
   item.done = !item.done;
   saveState(); renderMarket();
+  syncPush('toggle_market', { id: item.id, done: item.done });
   const total = list.items.length;
   const done = list.items.filter(x => x.done).length;
   if (total > 0 && done === total) celebrate('¡Lista completa! 🛒');
@@ -1903,304 +2161,15 @@ document.getElementById('scanSaveBtn').addEventListener('click', () => {
 });
 
 /* ========================
-   NOTAS DE VOZ (grabacion + transcripcion)
-   ======================== */
-const VOICE_DB = 'miDiaVoiceNotesDB';
-let voiceDbP = null;
-function openVoiceDB() {
-  if (voiceDbP) return voiceDbP;
-  voiceDbP = new Promise((resolve, reject) => {
-    const req = indexedDB.open(VOICE_DB, 1);
-    req.onupgradeneeded = () => { req.result.createObjectStore('notes', { keyPath: 'id' }); };
-    req.onsuccess = () => resolve(req.result);
-    req.onerror = () => reject(req.error);
-  });
-  return voiceDbP;
-}
-async function saveVoiceNote(note) {
-  const db = await openVoiceDB();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction('notes', 'readwrite');
-    tx.objectStore('notes').put(note);
-    tx.oncomplete = () => resolve();
-    tx.onerror = () => reject(tx.error);
-  });
-}
-async function getVoiceNotes() {
-  const db = await openVoiceDB();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction('notes', 'readonly');
-    const req = tx.objectStore('notes').getAll();
-    req.onsuccess = () => resolve((req.result || []).sort((a,b) => b.at - a.at));
-    req.onerror = () => reject(req.error);
-  });
-}
-async function deleteVoiceNote(id) {
-  const db = await openVoiceDB();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction('notes', 'readwrite');
-    tx.objectStore('notes').delete(id);
-    tx.oncomplete = () => resolve();
-    tx.onerror = () => reject(tx.error);
-  });
-}
-
-let mediaRecorder = null, audioChunks = [], recognizer = null, liveTranscript = '', recording = false;
-
-function initRecognizer() {
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) return null;
-  const r = new SR();
-  r.lang = 'es-CO';
-  r.continuous = true;
-  r.interimResults = true;
-  return r;
-}
-
-async function startRecording() {
-  const statusEl = document.getElementById('voiceStatus');
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    audioChunks = [];
-    mediaRecorder = new MediaRecorder(stream);
-    mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
-    mediaRecorder.onstop = async () => {
-      stream.getTracks().forEach(t => t.stop());
-      const blob = new Blob(audioChunks, { type: 'audio/webm' });
-      const note = { id: uid(), at: Date.now(), date: todayISO(), blob, transcript: liveTranscript.trim() };
-      await saveVoiceNote(note);
-      renderVoiceNotes();
-      statusEl.innerHTML = '<div style="color:#0B8556;font-size:13px;font-weight:600;">✅ Nota guardada.</div>';
-    };
-    mediaRecorder.start();
-    liveTranscript = '';
-
-    recognizer = initRecognizer();
-    if (recognizer) {
-      recognizer.onresult = (ev) => {
-        let interim = '';
-        for (let i = ev.resultIndex; i < ev.results.length; i++) {
-          const t = ev.results[i][0].transcript;
-          if (ev.results[i].isFinal) liveTranscript += t + ' ';
-          else interim += t;
-        }
-        statusEl.innerHTML = `<div style="color:var(--slate);font-size:13px;">🎙️ Escuchando... <i>${escapeHTML(liveTranscript + interim)}</i></div>`;
-      };
-      recognizer.onerror = (ev) => {
-        // 'no-speech' y 'aborted' son normales en modo continuo (silencios, cambios de foco):
-        // se reinician solos en onend. Solo avisamos si es un error real.
-        if (ev.error !== 'no-speech' && ev.error !== 'aborted') {
-          const msgs = {
-            'not-allowed': 'Chrome no tiene permiso para usar el micrófono en el reconocimiento de voz.',
-            'audio-capture': 'No se pudo capturar audio para la transcripción (puede que otra app esté usando el micrófono).',
-            'network': 'Sin conexión a internet: la transcripción necesita datos/wifi.',
-            'service-not-allowed': 'El reconocimiento de voz está bloqueado en este navegador.'
-          };
-          statusEl.innerHTML = `<div style="color:#C82346;font-size:13px;">⚠️ ${msgs[ev.error] || ('No se pudo transcribir (' + ev.error + '). El audio se guarda igual.')}</div>`;
-        }
-      };
-      recognizer.onend = () => {
-        // Chrome corta el reconocimiento cada cierto tiempo aunque continuous=true.
-        // Si seguimos grabando, lo reiniciamos para no perder la transcripción.
-        if (recording) {
-          try { recognizer.start(); } catch (e) { /* ya estaba iniciado */ }
-        }
-      };
-      recognizer.start();
-    } else {
-      statusEl.innerHTML = '<div style="color:var(--slate);font-size:13px;">🎙️ Grabando (tu navegador no soporta transcripción automática; podrás escuchar el audio igual).</div>';
-    }
-    recording = true;
-    document.getElementById('voiceRecordBtn').textContent = '⏹️ Detener grabación';
-  } catch (err) {
-    statusEl.innerHTML = '<div style="color:#C82346;font-size:13px;">No se pudo acceder al micrófono. Revisa los permisos de Chrome para este sitio.</div>';
-  }
-}
-
-function stopRecording() {
-  recording = false;
-  if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
-  if (recognizer) { recognizer.onend = null; try { recognizer.stop(); } catch(e){} }
-  document.getElementById('voiceRecordBtn').textContent = '🎙️ Grabar nota de voz';
-}
-
-document.getElementById('voiceRecordBtn').addEventListener('click', () => {
-  if (recording) stopRecording(); else startRecording();
-});
-
-async function renderVoiceNotes() {
-  const list = document.getElementById('voiceList');
-  const notes = await getVoiceNotes();
-  if (!notes.length) {
-    list.innerHTML = `<div class="empty"><span class="empty-emoji">🎙️</span>Aún no tienes notas de voz. Graba la primera arriba.</div>`;
-    return;
-  }
-  list.innerHTML = notes.map(n => {
-    const url = URL.createObjectURL(n.blob);
-    const d = new Date(n.at);
-    const when = d.toLocaleDateString('es-CO', { day: 'numeric', month: 'short' }) + ' · ' + d.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
-    return `
-      <div class="item" style="flex-direction:column; align-items:stretch; gap:8px;" data-id="${n.id}">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <span class="day-badge">${when}</span>
-          <button class="del-btn" data-action="voice-del">✕</button>
-        </div>
-        <audio controls src="${url}" style="width:100%;"></audio>
-        ${n.transcript ? `<div class="item-title" style="font-weight:500;">"${escapeHTML(n.transcript)}"</div>` : `<div class="item-meta">Sin transcripción</div>`}
-        ${n.transcript ? `<button class="btn secondary" data-action="voice-use" style="align-self:flex-start;">✨ Usar en captura rápida</button>` : ''}
-      </div>
-    `;
-  }).join('');
-
-  list.querySelectorAll('.item').forEach(el => {
-    const id = el.dataset.id;
-    const note = notes.find(n => n.id === id);
-    const delBtn = el.querySelector('[data-action="voice-del"]');
-    if (delBtn) delBtn.addEventListener('click', async () => { await deleteVoiceNote(id); renderVoiceNotes(); });
-    const useBtn = el.querySelector('[data-action="voice-use"]');
-    if (useBtn) useBtn.addEventListener('click', () => {
-      document.getElementById('quickInput').value = note.transcript;
-      document.querySelector('[data-tab="captura"]').click();
-      document.getElementById('quickInput').focus();
-    });
-  });
-}
-
-/* ========================
-   GOOGLE CALENDAR
-   ======================== */
-const GOOGLE_CLIENT_ID = '263060898821-jji5fm3j984o881o13vn2et8oeo6usl0.apps.googleusercontent.com';
-const GCAL_SCOPE = 'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/calendar.readonly';
-let gCalToken = null;
-let gCalTokenClient = null;
-
-function calSetConnectedUI(connected) {
-  document.getElementById('calDisconnected').style.display = connected ? 'none' : 'block';
-  document.getElementById('calConnected').style.display = connected ? 'block' : 'none';
-}
-
-function initGCalClient() {
-  if (!window.google || !google.accounts || !google.accounts.oauth2) return null;
-  if (gCalTokenClient) return gCalTokenClient;
-  gCalTokenClient = google.accounts.oauth2.initTokenClient({
-    client_id: GOOGLE_CLIENT_ID,
-    scope: GCAL_SCOPE,
-    callback: (resp) => {
-      if (resp && resp.access_token) {
-        gCalToken = resp.access_token;
-        try { sessionStorage.setItem('gCalToken', gCalToken); } catch(e) {}
-        calSetConnectedUI(true);
-        loadUpcomingEvents();
-      }
-    }
-  });
-  return gCalTokenClient;
-}
-
-document.getElementById('calConnectBtn').addEventListener('click', () => {
-  const client = initGCalClient();
-  if (!client) { alert('No se pudo cargar el inicio de sesión de Google. Revisa tu conexión e intenta de nuevo.'); return; }
-  client.requestAccessToken();
-});
-document.getElementById('calRefreshBtn').addEventListener('click', loadUpcomingEvents);
-
-async function gcalFetch(path, options = {}) {
-  const res = await fetch('https://www.googleapis.com/calendar/v3/' + path, {
-    ...options,
-    headers: { ...(options.headers || {}), 'Authorization': 'Bearer ' + gCalToken, 'Content-Type': 'application/json' }
-  });
-  if (res.status === 401) {
-    gCalToken = null;
-    try { sessionStorage.removeItem('gCalToken'); } catch(e) {}
-    calSetConnectedUI(false);
-    throw new Error('Sesión expirada, vuelve a conectar.');
-  }
-  if (!res.ok) throw new Error('Error de Google Calendar: ' + res.status);
-  return res.json();
-}
-
-async function loadUpcomingEvents() {
-  const list = document.getElementById('calEventList');
-  list.innerHTML = '<div style="font-size:13px;color:var(--slate);">⏳ Cargando eventos...</div>';
-  try {
-    const timeMin = new Date().toISOString();
-    const timeMax = new Date(Date.now() + 30 * 24 * 3600 * 1000).toISOString();
-    const data = await gcalFetch('calendars/primary/events?' + new URLSearchParams({
-      timeMin, timeMax, maxResults: '10', singleEvents: 'true', orderBy: 'startTime'
-    }).toString());
-    const items = data.items || [];
-    if (!items.length) {
-      list.innerHTML = `<div class="empty"><span class="empty-emoji">📅</span>No tienes eventos en los próximos 30 días.</div>`;
-      return;
-    }
-    list.innerHTML = items.map(ev => {
-      const start = ev.start.dateTime || ev.start.date;
-      const d = new Date(start);
-      const when = ev.start.dateTime
-        ? d.toLocaleDateString('es-CO', { day: 'numeric', month: 'short' }) + ' · ' + d.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' })
-        : d.toLocaleDateString('es-CO', { day: 'numeric', month: 'short' });
-      return `
-        <div class="item">
-          <div style="width:40px;height:40px;border-radius:12px;background:#0072BC22;display:grid;place-items:center;font-size:18px;flex-shrink:0;">📅</div>
-          <div class="item-body">
-            <div class="item-title">${escapeHTML(ev.summary || '(sin título)')}</div>
-            <div class="item-meta"><span>${when}</span></div>
-          </div>
-        </div>
-      `;
-    }).join('');
-  } catch (err) {
-    list.innerHTML = `<div style="color:#C82346;font-size:13px;">${escapeHTML(err.message || 'No se pudieron cargar los eventos.')}</div>`;
-  }
-}
-
-document.getElementById('calAddBtn').addEventListener('click', async () => {
-  const statusEl = document.getElementById('calAddStatus');
-  const title = document.getElementById('calTitle').value.trim();
-  const date = document.getElementById('calDate').value;
-  const yearly = document.getElementById('calYearly').checked;
-  if (!title || !date) { statusEl.innerHTML = '<div style="color:#C82346;font-size:13px;">Escribe un título y elige una fecha.</div>'; return; }
-  statusEl.innerHTML = '<div style="color:var(--slate);font-size:13px;">⏳ Guardando...</div>';
-  try {
-    const body = {
-      summary: title,
-      start: { date },
-      end: { date }
-    };
-    if (yearly) body.recurrence = ['RRULE:FREQ=YEARLY'];
-    await gcalFetch('calendars/primary/events', { method: 'POST', body: JSON.stringify(body) });
-    statusEl.innerHTML = '<div style="color:#0B8556;font-size:13px;font-weight:600;">✅ Agregado a tu Google Calendar.</div>';
-    document.getElementById('calTitle').value = '';
-    document.getElementById('calYearly').checked = false;
-    loadUpcomingEvents();
-    celebrate('Evento agregado al calendario 📅');
-  } catch (err) {
-    statusEl.innerHTML = `<div style="color:#C82346;font-size:13px;">${escapeHTML(err.message || 'No se pudo guardar el evento.')}</div>`;
-  }
-});
-
-// restaurar sesion de calendario si sigue vigente en esta pestaña
-(function restoreGCalSession() {
-  try {
-    const saved = sessionStorage.getItem('gCalToken');
-    if (saved) {
-      gCalToken = saved;
-      calSetConnectedUI(true);
-      loadUpcomingEvents();
-    }
-  } catch(e) {}
-})();
-
-/* ========================
    INIT
    ======================== */
-renderVoiceNotes();
 loadState();
 updateHeader();
 renderTasks();
 renderExpenses();
 renderPayments();
 renderMarket();
+renderTravel();
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
