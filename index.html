@@ -67,15 +67,17 @@
 
   /* HEADER */
   .header {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 20px; flex-wrap: wrap; gap: 16px;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    position: relative;
+    margin-bottom: 20px; gap: 10px;
     background: var(--navy); color: var(--white);
     border-radius: var(--radius-lg);
-    padding: 20px 24px;
+    padding: 26px 24px 22px;
     box-shadow: var(--shadow-soft);
   }
-  .brand-row { display: flex; align-items: center; gap: 14px; }
+  .brand-row { display: flex; flex-direction: column; align-items: center; gap: 10px; }
   .compass-mark { width: 48px; height: 48px; flex-shrink: 0; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25)); }
+  .brand { display: flex; flex-direction: column; align-items: center; }
   .brand h1 {
     font-family: 'Fraunces', serif;
     font-weight: 800;
@@ -84,9 +86,16 @@
     line-height: 1.1;
     color: var(--white);
   }
-  .brand p.today-date { color: rgba(255,255,255,0.65); margin-top: 4px; font-size: 13px; font-weight: 600; text-transform: capitalize; }
-  .brand p.motivational { color: rgba(255,255,255,0.75); margin-top: 4px; font-size: 13px; font-style: italic; }
-  .header-actions { display: flex; align-items: center; gap: 10px; }
+  .brand p.today-date { color: rgba(255,255,255,0.65); margin-top: 6px; font-size: 13px; font-weight: 600; text-transform: capitalize; }
+  .brand p.motivational {
+    color: rgba(255,255,255,0.9); margin-top: 10px; font-size: 13px; font-style: italic;
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.1);
+    padding: 7px 16px; border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  .brand p.motivational::before, .brand p.motivational::after { content: '✨'; font-style: normal; font-size: 12px; }
+  .header-actions { display: flex; align-items: center; gap: 10px; position: absolute; top: 16px; right: 16px; }
   .streak {
     background: rgba(255,255,255,0.12);
     padding: 12px 18px;
@@ -897,7 +906,8 @@
 
       <div class="top-actions">
         <label class="btn" for="scanFile" style="cursor:pointer; display:inline-flex; align-items:center;">📷 Elegir foto o PDF</label>
-        <input type="file" id="scanFile" accept="image/*,application/pdf" style="display:none" /></div>
+        <input type="file" id="scanFile" accept="image/*,application/pdf" style="display:none" />
+      </div>
 
       <div id="scanStatus" style="margin-top: 10px;"></div>
       <div id="scanPreview" style="margin-top: 10px;"></div>
