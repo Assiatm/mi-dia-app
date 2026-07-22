@@ -61,32 +61,84 @@
     z-index: 0;
   }
 
-  .app { max-width: 1200px; margin: 0 auto; padding: 32px 24px 80px; position: relative; z-index: 1; }
+  .app { max-width: 1200px; margin: 0 auto; padding: 20px 24px 80px; position: relative; z-index: 1; }
+
+  .ico { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
 
   /* HEADER */
-  .header { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 32px; gap: 10px; }
+  .header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 20px; flex-wrap: wrap; gap: 16px;
+    background: var(--navy); color: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 20px 24px;
+    box-shadow: var(--shadow-soft);
+  }
+  .brand-row { display: flex; align-items: center; gap: 14px; }
+  .compass-mark { width: 48px; height: 48px; flex-shrink: 0; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25)); }
   .brand h1 {
     font-family: 'Fraunces', serif;
     font-weight: 800;
-    font-size: clamp(36px, 5vw, 56px);
-    letter-spacing: -0.02em;
-    line-height: 1;
-    background: linear-gradient(135deg, var(--coral), var(--purple));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    font-size: clamp(22px, 3vw, 28px);
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    color: var(--white);
   }
-  .brand p.today-date { color: var(--navy); margin-top: 4px; font-size: 14px; font-weight: 600; text-transform: capitalize; }
-  .brand p.motivational { color: var(--slate); margin-top: 6px; font-size: 15px; font-style: italic; }
+  .brand p.today-date { color: rgba(255,255,255,0.65); margin-top: 4px; font-size: 13px; font-weight: 600; text-transform: capitalize; }
+  .brand p.motivational { color: rgba(255,255,255,0.75); margin-top: 4px; font-size: 13px; font-style: italic; }
+  .header-actions { display: flex; align-items: center; gap: 10px; }
   .streak {
-    background: var(--white);
-    padding: 14px 20px;
+    background: rgba(255,255,255,0.12);
+    padding: 12px 18px;
     border-radius: 999px;
-    box-shadow: var(--shadow-soft);
     display: flex; align-items: center; gap: 10px;
-    font-weight: 600; font-size: 14px;
+    font-weight: 600; font-size: 13px; color: var(--white);
   }
-  .streak .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--turquoise); box-shadow: 0 0 12px var(--turquoise); }
+  .streak .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--turquoise); box-shadow: 0 0 10px var(--turquoise); }
+
+  /* HEADER: boton de candado / cambiar PIN */
+  .avatar-btn {
+    background: rgba(255,255,255,0.12); border: 0; cursor: pointer;
+    width: 42px; height: 42px; border-radius: 50%;
+    display: grid; place-items: center; font-size: 18px;
+    color: var(--white); transition: all .2s; flex-shrink: 0;
+  }
+  .avatar-btn:hover { background: rgba(255,255,255,0.22); transform: translateY(-1px); }
+
+  /* ===================== LOGIN GATE (PIN local) ===================== */
+  .login-gate {
+    position: fixed; inset: 0; z-index: 999;
+    background: linear-gradient(135deg, var(--navy), #150f38);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .login-gate.hidden { display: none; }
+  .app.app-hidden { display: none; }
+  .login-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 40px 32px 32px;
+    max-width: 360px; width: 100%;
+    text-align: center;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+    animation: pop .35s ease;
+  }
+  .login-card .compass-mark { width: 64px; height: 64px; margin: 0 auto 18px; }
+  .login-card h2 {
+    font-family: 'Fraunces', serif; font-weight: 700; font-size: 24px;
+    color: var(--navy); margin-bottom: 6px; letter-spacing: -0.01em;
+  }
+  .login-card .login-subtitle { color: var(--slate); font-size: 13px; margin-bottom: 24px; line-height: 1.5; }
+  .login-card .input {
+    width: 100%; text-align: center; letter-spacing: 10px;
+    font-size: 22px; font-weight: 700; margin-bottom: 6px;
+  }
+  .login-card .btn { width: 100%; justify-content: center; margin-top: 10px; }
+  .login-error {
+    color: #C82346; font-size: 13px; font-weight: 600;
+    min-height: 18px; margin: 6px 0 0;
+  }
+  .login-note { color: var(--slate); font-size: 11px; margin-top: 18px; }
 
   /* TABS */
   .tabs {
@@ -102,11 +154,13 @@
   .tab {
     flex: 1; min-width: fit-content;
     background: transparent; border: 0; cursor: pointer;
-    padding: 12px 20px; border-radius: 999px;
+    padding: 12px 18px; border-radius: 999px;
     font-family: inherit; font-size: 14px; font-weight: 600; color: var(--slate);
     transition: all .25s ease;
     white-space: nowrap;
+    display: flex; align-items: center; justify-content: center; gap: 7px;
   }
+  .tab .ico { width: 16px; height: 16px; }
   .tab:hover { color: var(--navy); }
   .tab.active {
     color: var(--white);
@@ -130,10 +184,12 @@
   .card h2 {
     font-family: 'Fraunces', serif;
     font-weight: 600;
-    font-size: 24px;
+    font-size: 22px;
     margin-bottom: 6px;
     letter-spacing: -0.01em;
+    display: flex; align-items: center; gap: 10px;
   }
+  .card h2 .ico { width: 20px; height: 20px; color: var(--purple); }
   .card .subtitle { color: var(--slate); font-size: 14px; margin-bottom: 20px; }
 
   /* INPUT ROW */
@@ -158,6 +214,7 @@
     box-shadow: var(--shadow-pop);
     transition: transform .15s, box-shadow .15s;
     white-space: nowrap;
+    display: inline-flex; align-items: center; gap: 8px; justify-content: center;
   }
   .btn:hover { transform: translateY(-2px); box-shadow: 0 16px 44px rgba(0, 174, 239, 0.25); }
   .btn:active { transform: translateY(0); }
@@ -358,11 +415,11 @@
 
   @media (max-width: 640px) {
     body { padding-bottom: env(safe-area-inset-bottom); }
-    .app { padding: 20px 14px 100px; }
+    .app { padding: 14px 14px 100px; }
     .card { padding: 18px 16px; border-radius: 20px; }
-    .header { margin-bottom: 20px; }
-    .brand h1 { font-size: 34px; }
-    .streak { padding: 10px 14px; font-size: 12px; }
+    .header { margin-bottom: 16px; padding: 16px 18px; }
+    .brand h1 { font-size: 20px; }
+    .streak { padding: 9px 13px; font-size: 11px; }
     .input-row { flex-direction: column; }
     .input-row .input, .input-row .select, .input-row .btn { width: 100%; min-width: 0; flex: 1 1 auto; }
     .input, .select { padding: 16px 18px; font-size: 16px; } /* 16px evita zoom en iOS */
@@ -387,41 +444,154 @@
       background: var(--white);
     }
     .tab {
-      flex: 1; min-width: 0; padding: 12px 6px;
-      font-size: 11px; border-radius: 16px;
-      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      flex: 1; min-width: 0; padding: 10px 4px;
+      font-size: 10px; border-radius: 16px;
+      flex-direction: column; align-items: center; gap: 3px;
       line-height: 1.2;
     }
+    .tab .ico { width: 18px; height: 18px; }
   }
 </style>
 </head>
 <body>
-<div class="app">
+
+<!-- ICON SPRITE -->
+<svg style="display:none">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></symbol>
+  <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M3 7a2 2 0 012-2h13a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/><path d="M16 12h3"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-cart" viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.3"/><circle cx="18" cy="20" r="1.3"/><path d="M2 3h2l2.6 12.4A2 2 0 008.5 17H18a2 2 0 002-1.6L21.6 7H6"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M12 20V4M20 20v-7"/></symbol>
+  <symbol id="i-note" viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h8M8 17h4"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 9a6 6 0 1112 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 004 0"/></symbol>
+  <symbol id="i-tools" viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 015 5l-6.6 6.6a2 2 0 01-2.8 0l-2.2-2.2a2 2 0 010-2.8l6.6-6.6z"/><path d="M6 14l-3 3 4 4 3-3"/></symbol>
+  <symbol id="i-suitcase" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+</svg>
+
+
+<!-- ===================== LOGIN GATE (PIN local, sin Google/OAuth) ===================== -->
+<div class="login-gate" id="loginGate">
+  <div class="login-card">
+    <svg viewBox="0 0 100 100" class="compass-mark">
+      <circle cx="50" cy="50" r="47" fill="#1F1A45"/>
+      <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="2"/>
+      <g stroke="white" stroke-width="2" opacity="0.7">
+        <line x1="50" y1="8" x2="50" y2="14"/>
+        <line x1="50" y1="86" x2="50" y2="92"/>
+        <line x1="8" y1="50" x2="14" y2="50"/>
+        <line x1="86" y1="50" x2="92" y2="50"/>
+      </g>
+      <polygon points="50,22 60,50 50,50" fill="#00AEEF"/>
+      <polygon points="50,22 40,50 50,50" fill="#0072BC"/>
+      <polygon points="50,78 60,50 50,50" fill="#D8D2E8"/>
+      <polygon points="50,78 40,50 50,50" fill="white"/>
+      <circle cx="50" cy="50" r="5" fill="white" stroke="#1F1A45" stroke-width="1.5"/>
+    </svg>
+    <h2 id="loginTitle">Mi Brújula</h2>
+    <p class="login-subtitle" id="loginSubtitle">Ingresa tu PIN para continuar</p>
+    <input type="password" inputmode="numeric" maxlength="6" class="input" id="pinInput" placeholder="••••" autocomplete="off" />
+    <p class="login-error" id="loginError"></p>
+    <button class="btn" id="loginSubmitBtn">Entrar</button>
+    <p class="login-note" id="loginNote">Tu PIN se guarda solo en este celular.</p>
+  </div>
+</div>
+
+<div class="app app-hidden" id="appRoot">
 
   <!-- HEADER -->
   <header class="header">
-    <div class="brand">
-      <h1>🌠 Mi Brújula</h1>
-      <p class="today-date" id="todayDate"></p>
-      <p class="motivational">Todo es posible, sigue trabajando por ello</p>
+    <div class="brand-row">
+      <svg viewBox="0 0 100 100" class="compass-mark">
+        <circle cx="50" cy="50" r="47" fill="#1F1A45"/>
+        <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="2"/>
+        <g stroke="white" stroke-width="2" opacity="0.7">
+          <line x1="50" y1="8" x2="50" y2="14"/>
+          <line x1="50" y1="86" x2="50" y2="92"/>
+          <line x1="8" y1="50" x2="14" y2="50"/>
+          <line x1="86" y1="50" x2="92" y2="50"/>
+        </g>
+        <polygon points="50,22 60,50 50,50" fill="#00AEEF"/>
+        <polygon points="50,22 40,50 50,50" fill="#0072BC"/>
+        <polygon points="50,78 60,50 50,50" fill="#D8D2E8"/>
+        <polygon points="50,78 40,50 50,50" fill="white"/>
+        <circle cx="50" cy="50" r="5" fill="white" stroke="#1F1A45" stroke-width="1.5"/>
+      </svg>
+      <div class="brand">
+        <h1>Mi Brújula</h1>
+        <p class="today-date" id="todayDate"></p>
+        <p class="motivational">Todo es posible, sigue trabajando por ello</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <!-- Botón de candado: re-bloquea la app y pide el PIN actual antes de permitir cambiarlo -->
+      <button class="avatar-btn" id="lockBtn" title="Cambiar PIN" aria-label="Cambiar PIN">🔒</button>
     </div>
   </header>
 
   <!-- TABS -->
   <nav class="tabs" role="tablist">
-    <button class="tab active" data-tab="tareas">✨ Tareas</button>
-    <button class="tab" data-tab="gastos">💸 Gastos</button>
-    <button class="tab" data-tab="pagos">🗓️ Pagos del mes</button>
-    <button class="tab" data-tab="mercado">🛒 Mercado</button>
-    <button class="tab" data-tab="dashboard">📊 Dashboard</button>
-    <button class="tab" data-tab="captura">⚡ Rápido</button>
-    <button class="tab" data-tab="viaje">🧭 Control de Viajes</button>
+    <button class="tab active" data-tab="dashboard"><svg class="ico"><use href="#i-chart"></use></svg>Dashboard</button>
+    <button class="tab" data-tab="tareas"><svg class="ico"><use href="#i-check"></use></svg>Tareas</button>
+    <button class="tab" data-tab="gastos"><svg class="ico"><use href="#i-wallet"></use></svg>Gastos</button>
+    <button class="tab" data-tab="pagos"><svg class="ico"><use href="#i-calendar"></use></svg>Pagos del mes</button>
+    <button class="tab" data-tab="mercado"><svg class="ico"><use href="#i-cart"></use></svg>Mercado</button>
+    <button class="tab" data-tab="notas"><svg class="ico"><use href="#i-note"></use></svg>Notas</button>
+    <button class="tab" data-tab="recordatorios"><svg class="ico"><use href="#i-bell"></use></svg>Recordatorios</button>
+    <button class="tab" data-tab="viaje"><svg class="ico"><use href="#i-suitcase"></use></svg>Control de Viajes</button>
+    <button class="tab" data-tab="captura"><svg class="ico"><use href="#i-tools"></use></svg>Herramientas</button>
   </nav>
 
-  <!-- ===================== TAREAS ===================== -->
-  <section class="panel active" id="panel-tareas">
+  <!-- ===================== DASHBOARD ===================== -->
+  <section class="panel active" id="panel-dashboard">
+    <div class="metrics">
+      <div class="metric pink">
+        <div class="metric-label">Gasto del mes</div>
+        <div class="metric-value" id="dashMonth">$0</div>
+        <div class="metric-hint" id="dashMonthCat">—</div>
+      </div>
+      <div class="metric purple">
+        <div class="metric-label">Pagos fijos</div>
+        <div class="metric-value" id="dashFixed">$0</div>
+        <div class="metric-hint" id="dashFixedProgress">0% pagado</div>
+      </div>
+      <div class="metric teal">
+        <div class="metric-label">Compromiso total</div>
+        <div class="metric-value" id="dashTotal">$0</div>
+        <div class="metric-hint">Gastos + fijos del mes</div>
+      </div>
+      <div class="metric orange">
+        <div class="metric-label">Tareas hoy</div>
+        <div class="metric-value" id="dashTasks">0/0</div>
+        <div class="metric-hint" id="dashTasksHint">Sigue así ✨</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h2><svg class="ico"><use href="#i-chart"></use></svg>Gastos por categoría</h2>
+        <p class="subtitle">Este mes, dónde se está yendo la plata.</p>
+        <div class="chart-wrap"><canvas id="chartPie"></canvas></div>
+      </div>
+      <div class="card">
+        <h2><svg class="ico"><use href="#i-chart"></use></svg>Últimos 7 días</h2>
+        <p class="subtitle">Cuánto has gastado día a día.</p>
+        <div class="chart-wrap"><canvas id="chartBar"></canvas></div>
+      </div>
+    </div>
+
     <div class="card">
-      <h2>Tareas de hoy</h2>
+      <h2><svg class="ico"><use href="#i-wallet"></use></svg>Pagos fijos por categoría</h2>
+      <p class="subtitle">Distribución de tus compromisos mensuales.</p>
+      <div class="chart-wrap"><canvas id="chartPay"></canvas></div>
+    </div>
+  </section>
+
+  <!-- ===================== TAREAS ===================== -->
+  <section class="panel" id="panel-tareas">
+    <div class="card">
+      <h2><svg class="ico"><use href="#i-check"></use></svg>Tareas de hoy</h2>
       <p class="subtitle">Escribe algo pequeño y márcalo. Los pequeños checks también cuentan.</p>
 
       <div class="progress-wrap">
@@ -459,7 +629,7 @@
   <!-- ===================== GASTOS ===================== -->
   <section class="panel" id="panel-gastos">
     <div class="card">
-      <h2>Registro de gastos</h2>
+      <h2><svg class="ico"><use href="#i-wallet"></use></svg>Registro de gastos</h2>
       <p class="subtitle">Anota lo que gastas apenas suceda. Al final del mes te vas a agradecer.</p>
 
       <div class="metrics" style="margin-bottom: 24px;">
@@ -506,7 +676,7 @@
   <!-- ===================== PAGOS ===================== -->
   <section class="panel" id="panel-pagos">
     <div class="card">
-      <h2>Pagos mensuales</h2>
+      <h2><svg class="ico"><use href="#i-calendar"></use></svg>Pagos mensuales</h2>
       <p class="subtitle">Tus pagos fijos organizados. Marca lo que ya pagaste, como en tu libreta pero digital.</p>
 
       <div class="metrics">
@@ -547,7 +717,7 @@
   <!-- ===================== MERCADO ===================== -->
   <section class="panel" id="panel-mercado">
     <div class="card">
-      <h2>Lista de mercado</h2>
+      <h2><svg class="ico"><use href="#i-cart"></use></svg>Lista de mercado</h2>
       <p class="subtitle">Tu lista siempre lista. Marca lo que ya tienes, edita cantidades, y compártela por WhatsApp.</p>
 
       <div class="metrics" style="margin-bottom: 20px;">
@@ -593,157 +763,49 @@
     </div>
   </section>
 
-  <!-- ===================== DASHBOARD ===================== -->
-  <section class="panel" id="panel-dashboard">
-    <div class="metrics">
-      <div class="metric pink">
-        <div class="metric-label">Gasto del mes</div>
-        <div class="metric-value" id="dashMonth">$0</div>
-        <div class="metric-hint" id="dashMonthCat">—</div>
-      </div>
-      <div class="metric purple">
-        <div class="metric-label">Pagos fijos</div>
-        <div class="metric-value" id="dashFixed">$0</div>
-        <div class="metric-hint" id="dashFixedProgress">0% pagado</div>
-      </div>
-      <div class="metric teal">
-        <div class="metric-label">Compromiso total</div>
-        <div class="metric-value" id="dashTotal">$0</div>
-        <div class="metric-hint">Gastos + fijos del mes</div>
-      </div>
-      <div class="metric orange">
-        <div class="metric-label">Tareas hoy</div>
-        <div class="metric-value" id="dashTasks">0/0</div>
-        <div class="metric-hint" id="dashTasksHint">Sigue así ✨</div>
-      </div>
-    </div>
-
-    <div class="grid-2">
-      <div class="card">
-        <h2>Gastos por categoría</h2>
-        <p class="subtitle">Este mes, dónde se está yendo la plata.</p>
-        <div class="chart-wrap"><canvas id="chartPie"></canvas></div>
-      </div>
-      <div class="card">
-        <h2>Últimos 7 días</h2>
-        <p class="subtitle">Cuánto has gastado día a día.</p>
-        <div class="chart-wrap"><canvas id="chartBar"></canvas></div>
-      </div>
-    </div>
-
+  <!-- ===================== NOTAS ===================== -->
+  <section class="panel" id="panel-notas">
     <div class="card">
-      <h2>Pagos fijos por categoría</h2>
-      <p class="subtitle">Distribución de tus compromisos mensuales.</p>
-      <div class="chart-wrap"><canvas id="chartPay"></canvas></div>
+      <h2><svg class="ico"><use href="#i-note"></use></svg>Notas rápidas</h2>
+      <p class="subtitle">Tu diario de pensamientos, ideas y cosas que no quieres olvidar.</p>
+      <div class="input-row" style="align-items: flex-start;">
+        <textarea class="input" id="noteInput" rows="3" placeholder="Escribe una nota..." style="flex: 1; min-width: 100%; resize: vertical; font-family: inherit;"></textarea>
+      </div>
+      <div class="top-actions" style="margin-bottom: 0;">
+        <button class="btn" id="addNoteBtn"><svg class="ico"><use href="#i-plus"></use></svg>Guardar</button>
+      </div>
+      <div id="noteList" style="margin-top: 18px;"></div>
     </div>
   </section>
 
-  <!-- ===================== CAPTURA RAPIDA ===================== -->
-  <section class="panel" id="panel-captura">
+  <!-- ===================== RECORDATORIOS ===================== -->
+  <section class="panel" id="panel-recordatorios">
     <div class="card">
-      <h2>Captura rapida</h2>
-      <p class="subtitle">Escribe en lenguaje natural y lo mando a la seccion correcta. Ideal para anotar al vuelo.</p>
-
-      <div class="input-row">
-        <input class="input" id="quickInput" type="text" placeholder="Ej: gaste 20000 en mercado" style="flex: 2;" />
-        <button class="btn" id="quickBtn">Capturar</button>
-      </div>
-
-      <div class="chips" id="quickExamples" style="margin-bottom: 8px;">
-        <div class="chip" data-ex="gaste 15000 en almuerzo">gaste 15000 en almuerzo</div>
-        <div class="chip" data-ex="pague internet">pague internet</div>
-        <div class="chip" data-ex="tarea: llamar al banco">tarea: llamar al banco</div>
-        <div class="chip" data-ex="mercado: tomate, cebolla, huevos">mercado: 3 items</div>
-      </div>
-
-      <div id="quickResult" style="margin-top: 6px;"></div>
-
-      <div style="margin-top: 18px; padding: 16px; background: #FAFAFF; border-radius: 16px; font-size: 13px; color: var(--slate); line-height: 1.7;">
-        <b style="color: var(--navy);">Como se interpreta</b><br>
-        Con un monto y palabras como <b>gaste / compre / pague</b>: se registra un <b>gasto</b>.<br>
-        <b>pague</b> + nombre de un pago fijo (ej: internet, luz): marca ese <b>pago</b> como pagado.<br>
-        Empezando con <b>tarea:</b>: crea una <b>tarea</b>.<br>
-        Empezando con <b>mercado:</b> o <b>comprar:</b> y items separados por coma: los agrega a tu <b>lista activa</b>.<br>
-        Cualquier otra cosa se guarda como <b>tarea</b>.
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>📎 Escanear factura o recibo</h2>
-      <p class="subtitle">Sube una foto de un recibo o un PDF (extracto, factura). Leo el texto y te propongo el gasto para que lo confirmes.</p>
+      <h2><svg class="ico"><use href="#i-bell"></use></svg>Recordatorios</h2>
+      <p class="subtitle">Avisos con fecha y hora: pagos, citas, cumpleaños. Activa las notificaciones para no perdértelos mientras tengas la app abierta.</p>
 
       <div class="top-actions">
-        <label class="btn" for="scanFile" style="cursor:pointer; display:inline-flex; align-items:center;">📷 Elegir foto o PDF</label>
-        <input type="file" id="scanFile" accept="image/*,application/pdf" style="display:none" />
+        <button class="btn secondary" id="notifPermBtn"><svg class="ico"><use href="#i-bell"></use></svg>Activar notificaciones</button>
+        <span class="day-badge" id="notifStatus">Notificaciones: desactivadas</span>
       </div>
-
-      <div id="scanStatus" style="margin-top: 10px;"></div>
-      <div id="scanPreview" style="margin-top: 10px;"></div>
-      <div id="scanFormWrap" class="hide-scan" style="margin-top: 14px; display:none;">
-        <div class="input-row">
-          <input class="input" id="scanDesc" type="text" placeholder="Descripción" style="flex: 2;" />
-          <input class="input" id="scanAmount" type="number" placeholder="Monto" min="0" step="1" style="flex: 0 1 130px;" />
-          <select class="select" id="scanCat" style="flex: 0 1 170px;">
-            <option value="mercado">🛒 Mercado</option>
-            <option value="comida">🍽️ Comida</option>
-            <option value="transporte">🚗 Transporte</option>
-            <option value="ocio">🎬 Ocio</option>
-            <option value="salud">🏥 Salud</option>
-            <option value="ropa">👕 Ropa</option>
-            <option value="hogar">🏠 Hogar</option>
-            <option value="educacion">📚 Educación</option>
-            <option value="regalos">🎁 Regalos</option>
-            <option value="otros">💡 Otros</option>
-          </select>
-          <input class="input" id="scanDate" type="date" style="flex: 0 1 150px;" />
-        </div>
-        <div class="top-actions">
-          <button class="btn" id="scanSaveBtn">✅ Guardar como gasto</button>
-          <button class="btn secondary" id="scanCancelBtn">Cancelar</button>
-        </div>
-        <details style="margin-top: 8px;">
-          <summary style="cursor:pointer; font-size:12px; color: var(--slate);">Ver texto leído completo</summary>
-          <pre id="scanRawText" style="white-space: pre-wrap; font-size: 11px; color: var(--slate); background:#FAFAFF; padding:10px; border-radius:10px; margin-top:6px; max-height:160px; overflow:auto;"></pre>
-        </details>
-      </div>
-      <p class="note-small" style="font-size:12px; color:var(--slate); margin-top:10px;">Todo se procesa en tu celular: la foto o el PDF no se suben a ningún servidor. La lectura de letra manuscrita o fotos borrosas puede fallar; siempre puedes corregir antes de guardar.</p>
-    </div>
-
-    <div class="card">
-      <h2>🔗 Sincronizar con Luttia (Telegram)</h2>
-      <p class="subtitle">Conecta con tu asistente de Telegram: lo que registres ahí (tareas, gastos, pagos, mercado) llega aquí, y lo que agregues aquí se guarda también en la misma hoja que usa Luttia.</p>
 
       <div class="input-row">
-        <input class="input" id="syncUrl" type="text" placeholder="URL de tu n8n (ej: https://n8n.tudominio.com)" style="flex: 2;" />
+        <input class="input" id="remText" type="text" placeholder="¿Qué quieres recordar?" style="flex: 2;" />
+        <input class="input" id="remDate" type="date" style="flex: 0 1 160px;" />
+        <input class="input" id="remTime" type="time" style="flex: 0 1 120px;" />
+        <button class="btn" id="addRemBtn"><svg class="ico"><use href="#i-plus"></use></svg>Agregar</button>
       </div>
-      <div class="input-row">
-        <input class="input" id="syncKey" type="password" placeholder="Clave secreta (Header Auth de n8n)" style="flex: 2;" />
-        <button class="btn secondary" id="syncSaveBtn">💾 Guardar</button>
-      </div>
-      <div class="top-actions">
-        <button class="btn" id="syncPullBtn">🔄 Sincronizar ahora</button>
-      </div>
-      <div id="syncStatus" style="margin-top: 10px; font-size: 13px; color: var(--slate);"></div>
-      <p class="note-small" style="font-size:12px; color:var(--slate); margin-top:10px;">La clave se guarda solo en este celular (nunca queda en el código de la app). Debes crear una credencial "Header Auth" con el nombre <b>X-Brujula-Key</b> en los nodos webhook de tu flujo de n8n, con este mismo valor secreto.</p>
-    </div>
 
-    <div class="card">
-      <h2>Respaldo de datos</h2>
-      <p class="subtitle">Tus datos viven solo en este dispositivo. Descarga un respaldo para no perderlos, moverlos a otro telefono, o abrirlos en el panel de Cowork.</p>
+      <p class="note-small" style="font-size:12px; color:var(--slate); margin: 0 0 12px;">Nota: al ser una app sin servidor, las notificaciones solo llegan mientras Mi Brújula esté abierta en el celular (aunque sea en segundo plano). Con la app totalmente cerrada no se dispara ningún aviso; para no perder nada, revisa esta pestaña o deja la app abierta.</p>
 
-      <div class="top-actions">
-        <button class="btn" id="backupExport">💾 Descargar respaldo</button>
-        <button class="btn secondary" id="backupImportBtn">📥 Restaurar respaldo</button>
-        <input type="file" id="backupFile" accept="application/json,.json" style="display:none" />
-      </div>
-      <p class="subtitle" style="margin-top: 12px; margin-bottom: 0;">El respaldo es un archivo <b>.json</b> con tus tareas, gastos, pagos y listas. Restaurar reemplaza los datos actuales por los del archivo.</p>
+      <div id="remList"></div>
     </div>
   </section>
 
   <!-- ===================== VIAJE PANAMA ===================== -->
   <section class="panel" id="panel-viaje">
     <div class="card">
-      <h2>🧭 Centro de Control de Viajes</h2>
+      <h2><svg class="ico"><use href="#i-suitcase"></use></svg>Centro de Control de Viajes</h2>
       <p class="subtitle">Viaje a Panamá · Familia: Tati, John, Nicolás, Esteban y Maximiliano.</p>
 
       <div class="metrics" style="margin-bottom: 20px;">
@@ -759,1423 +821,4 @@
         </div>
         <div class="metric purple">
           <div class="metric-label">Faltan</div>
-          <div class="metric-value" id="travPending">0</div>
-          <div class="metric-hint">Revisa antes de salir</div>
-        </div>
-      </div>
-
-      <div class="input-row">
-        <input class="input" id="travItem" type="text" placeholder="Artículo (ej: Pasaportes)" style="flex: 2;" />
-        <select class="select" id="travCat" style="flex: 0 1 200px;"></select>
-      </div>
-      <div class="input-row">
-        <select class="select" id="travOwner" style="flex: 0 1 160px;">
-          <option>Familia</option><option>Tati</option><option>John</option><option>Nicolás</option><option>Esteban</option><option>Maximiliano</option><option>Niños</option>
-        </select>
-        <select class="select" id="travPrio" style="flex: 0 1 170px;">
-          <option>Imprescindible</option><option>Importante</option><option>Opcional</option>
-        </select>
-        <button class="btn" id="addTravBtn">Agregar</button>
-      </div>
-
-      <input class="input" id="travSearch" type="text" placeholder="Buscar artículo o responsable..." style="margin-top: 10px;" />
-    </div>
-
-    <div class="card" id="travCriticalCard" style="display:none;">
-      <h2>🚨 No olvidar (imprescindibles)</h2>
-      <div id="travCritical"></div>
-    </div>
-
-    <div id="travCards"></div>
-  </section>
-
-</div>
-
-<!-- CELEBRATION -->
-<div class="celebrate" id="celebrate">
-  <div class="celebrate-msg" id="celebrateMsg">¡Lo lograste hoy! 🎉</div>
-</div>
-
-<!-- MODAL: nuevo pago -->
-<div class="modal-backdrop" id="payModal">
-  <div class="modal">
-    <h3>Nuevo pago mensual</h3>
-    <p>Registra un pago recurrente. Puedes marcarlo como pagado mes a mes.</p>
-    <div class="input-row">
-      <input class="input" id="pmName" type="text" placeholder="Ej: Internet, Colegio Juan, TC BBVA..." />
-      <select class="select" id="pmCat">
-        <option value="tarjetas">💳 Tarjetas de crédito</option>
-        <option value="servicios">🏠 Servicios del hogar</option>
-        <option value="creditos">🏦 Créditos</option>
-        <option value="suscripciones">📱 Suscripciones</option>
-        <option value="colegio">🎓 Colegio niños</option>
-        <option value="otros">✨ Otros</option>
-      </select>
-      <input class="input" id="pmAmount" type="number" placeholder="Monto mensual" min="0" step="1" />
-      <input class="input" id="pmDay" type="number" placeholder="Día del mes (1-31)" min="1" max="31" />
-    </div>
-    <div class="modal-actions">
-      <button class="btn secondary" id="pmCancel">Cancelar</button>
-      <button class="btn" id="pmSave">Guardar pago</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL: confirmar reset -->
-<div class="modal-backdrop" id="resetModal">
-  <div class="modal">
-    <h3>¿Empezar mes nuevo?</h3>
-    <p>Se van a desmarcar todos los pagos como "pendientes" para el nuevo mes. Los pagos que registraste se mantienen.</p>
-    <div class="modal-actions">
-      <button class="btn secondary" id="resetCancel">Cancelar</button>
-      <button class="btn" id="resetConfirm">Sí, reiniciar</button>
-    </div>
-  </div>
-</div>
-
-<script>
-/* ========================
-   STORAGE (con fallback)
-   ======================== */
-const STORE_KEY = 'miDiaAppV1';
-let state = {
-  tasks: [],
-  expenses: [],
-  payments: [],
-  market: null,
-  activeList: null,
-  monthResetAt: null,
-  travel: []
-};
-
-function loadState() {
-  try {
-    const raw = localStorage.getItem(STORE_KEY);
-    if (raw) state = { ...state, ...JSON.parse(raw) };
-  } catch (e) { /* localStorage no disponible: usar memoria */ }
-  // seed de pagos comunes si es la primera vez
-  if (!state.payments || state.payments.length === 0) {
-    state.payments = seedPayments();
-    saveState();
-  }
-  // migracion: agrega pagos detectados en la libreta que faltaban (una sola vez)
-  if (!state.paymentsV2Added) {
-    const extras = [
-      { name: 'TC Latam', cat: 'tarjetas' },
-      { name: 'Crédito 2', cat: 'creditos' },
-      { name: 'Cuota casa', cat: 'creditos' },
-      { name: 'Celular', cat: 'servicios' },
-      { name: 'Medicina prepagada', cat: 'otros' },
-      { name: 'Salud mamá', cat: 'otros' },
-      { name: 'Apoyo mamá', cat: 'otros' }
-    ];
-    const existingNames = state.payments.map(p => p.name.toLowerCase().trim());
-    extras.forEach(ex => {
-      if (!existingNames.includes(ex.name.toLowerCase())) {
-        state.payments.push({ id: uid(), name: ex.name, cat: ex.cat, amount: 0, day: 1, paid: false });
-      }
-    });
-    state.paymentsV2Added = true;
-    saveState();
-  }
-  // seed de listas de mercado
-  if (!state.market || Object.keys(state.market).length === 0) {
-    const seeds = seedMarket();
-    state.market = {};
-    seeds.forEach(s => { state.market[s.id] = s; });
-    state.activeList = seeds[0].id;
-    saveState();
-  }
-  if (!state.activeList || !state.market[state.activeList]) {
-    state.activeList = Object.keys(state.market)[0];
-  }
-  // seed de checklist de viaje a Panama (una sola vez)
-  if (!state.travel) state.travel = [];
-  if (!state.travelSeeded) {
-    state.travel = state.travel.concat(seedTravel());
-    state.travelSeeded = true;
-    saveState();
-  }
-}
-function saveState() {
-  try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
-}
-
-function seedMarket() {
-  const listVerduras = [
-    'Papa|4 lb', 'Plátano verde|1 kg', 'Plátano maduro|1 lb',
-    'Cebolla larga|3 gajos', 'Habichuela|1/2 lb', 'Tomate|3 lb (no maduro)',
-    'Zanahoria|1 lb', 'Cilantro y perejil|1 gajo pequeño', 'Arveja|1/2 lb',
-    'Arracacha|1/2 lb', 'Frijol|1/2 lb', 'Pimentón|1 unidad (no maduro)',
-    'Pepino|2 medianos', 'Brócoli|1/2 lb', 'Guayaba|1 kg',
-    'Mora|1 kg', 'Rama de apio|1 gajo', 'Ahuyama|1/2 lb',
-    'Mandarina|1 lb', 'Duraznos|1 lb', 'Fresas|1 kg',
-    'Bananos|4 (no maduros)', 'Tomate de árbol|1 lb', 'Queso doble crema|1 lb'
-  ];
-  const listGranos = [
-    'Arroz|2 kg', 'Fríjol seco|1 lb', 'Lenteja|1 lb', 'Garbanzo|1/2 lb',
-    'Pasta|500 g', 'Avena en hojuelas|500 g', 'Harina de trigo|1 kg',
-    'Panela|1 kg', 'Azúcar|1 kg', 'Sal|500 g', 'Aceite|1 L',
-    'Café|500 g', 'Chocolate|1 pastilla', 'Galletas|1 paquete'
-  ];
-  const listLacteos = [
-    'Leche|4 L', 'Huevos|30 unidades', 'Queso campesino|1 lb',
-    'Yogur|1 L', 'Mantequilla|250 g', 'Kumis|1 L', 'Crema de leche|200 ml'
-  ];
-  const listCarnes = [
-    'Pollo|2 lb', 'Carne de res|1 lb', 'Carne molida|1 lb',
-    'Pescado|1 lb', 'Salchichas|1 paquete', 'Tocineta|250 g',
-    'Jamón|250 g', 'Chicharrón|1 lb'
-  ];
-  const listAseo = [
-    'Detergente ropa|1 bolsa', 'Jabón lavaplatos|1 unidad', 'Blanqueador|1 L',
-    'Papel higiénico|12 rollos', 'Toallas de cocina|1 rollo',
-    'Bolsas de basura|1 paquete', 'Suavizante|1 L', 'Desinfectante|1 L',
-    'Jabón de manos|1 unidad', 'Shampoo|1 unidad', 'Crema dental|1 unidad',
-    'Papel aluminio|1 rollo'
-  ];
-
-  const build = (name, arr) => ({
-    id: uid(),
-    name,
-    items: arr.map(s => {
-      const [nm, qty] = s.split('|');
-      return { id: uid(), name: nm, qty: qty || '', done: false };
-    })
-  });
-
-  return [
-    build('Frutas y verduras', listVerduras),
-    build('Granos y despensa', listGranos),
-    build('Lácteos y huevos', listLacteos),
-    build('Carnes y proteínas', listCarnes),
-    build('Aseo del hogar', listAseo)
-  ];
-}
-
-function seedPayments() {
-  // sugerencias basadas en la libreta del usuario
-  return [
-    { id: uid(), name: 'TC BBVA', cat: 'tarjetas', amount: 0, day: 15, paid: false },
-    { id: uid(), name: 'TC Davibank', cat: 'tarjetas', amount: 0, day: 6, paid: false },
-    { id: uid(), name: 'TC Nubank', cat: 'tarjetas', amount: 0, day: 13, paid: false },
-    { id: uid(), name: 'Luz casa', cat: 'servicios', amount: 0, day: 14, paid: false },
-    { id: uid(), name: 'Agua casa', cat: 'servicios', amount: 0, day: 17, paid: false },
-    { id: uid(), name: 'Gas casa', cat: 'servicios', amount: 0, day: 27, paid: false },
-    { id: uid(), name: 'Internet', cat: 'servicios', amount: 0, day: 22, paid: false },
-    { id: uid(), name: 'Administración', cat: 'servicios', amount: 0, day: 18, paid: false },
-    { id: uid(), name: 'Crédito vivienda', cat: 'creditos', amount: 0, day: 6, paid: false },
-    { id: uid(), name: 'Spotify', cat: 'suscripciones', amount: 0, day: 19, paid: false },
-    { id: uid(), name: 'Google One', cat: 'suscripciones', amount: 0, day: 5, paid: false },
-    { id: uid(), name: 'Colegio niños', cat: 'colegio', amount: 0, day: 5, paid: false }
-  ];
-}
-
-const uid = () => Math.random().toString(36).slice(2, 10);
-const fmt = (n) => new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(n || 0);
-const todayISO = () => new Date().toISOString().slice(0, 10);
-
-/* ========================
-   SINCRONIZACION CON LUTTIA (n8n)
-   ======================== */
-const SYNC_CONFIG_KEY = 'miDiaSyncConfig';
-const SYNC_HEADER = 'X-Brujula-Key';
-
-function loadSyncConfig() {
-  try {
-    const raw = localStorage.getItem(SYNC_CONFIG_KEY);
-    return raw ? JSON.parse(raw) : { url: '', key: '' };
-  } catch (e) { return { url: '', key: '' }; }
-}
-function saveSyncConfig(cfg) {
-  try { localStorage.setItem(SYNC_CONFIG_KEY, JSON.stringify(cfg)); } catch (e) {}
-}
-function syncBaseUrl() {
-  const cfg = loadSyncConfig();
-  return (cfg.url || '').replace(/\/+$/, '');
-}
-function syncHeaders() {
-  const cfg = loadSyncConfig();
-  const h = { 'Content-Type': 'application/json' };
-  if (cfg.key) h[SYNC_HEADER] = cfg.key;
-  return h;
-}
-function syncConfigured() {
-  const cfg = loadSyncConfig();
-  return !!(cfg.url && cfg.key);
-}
-
-// Envia una accion a n8n en segundo plano; si falla, no interrumpe el uso local de la app.
-async function syncPush(action, data) {
-  if (!syncConfigured()) return;
-  try {
-    await fetch(syncBaseUrl() + '/webhook/sincronizar-brujula/action', {
-      method: 'POST',
-      headers: syncHeaders(),
-      body: JSON.stringify({ action, data })
-    });
-  } catch (e) {
-    console.warn('No se pudo sincronizar con Luttia:', e);
-  }
-}
-
-async function syncPull() {
-  const statusEl = document.getElementById('syncStatus');
-  if (!syncConfigured()) {
-    statusEl.innerHTML = '<span style="color:#C82346;">Falta guardar la URL y la clave antes de sincronizar.</span>';
-    return;
-  }
-  statusEl.innerHTML = '⏳ Sincronizando con Luttia...';
-  try {
-    const res = await fetch(syncBaseUrl() + '/webhook/sincronizar-brujula/data', { headers: syncHeaders() });
-    if (!res.ok) throw new Error('Respuesta ' + res.status + ' del servidor');
-    const data = await res.json();
-    if (data.tasks) state.tasks = data.tasks;
-    if (data.expenses) state.expenses = data.expenses;
-    if (data.payments) state.payments = data.payments;
-    if (data.market) state.market = data.market;
-    if (data.activeList && state.market[data.activeList]) state.activeList = data.activeList;
-    else if (!state.activeList || !state.market[state.activeList]) state.activeList = Object.keys(state.market)[0];
-    saveState();
-    renderTasks(); renderExpenses(); renderPayments(); renderMarket(); updateHeader();
-    const now = new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
-    statusEl.innerHTML = `<span style="color:#0B8556;">✅ Sincronizado a las ${now}.</span>`;
-  } catch (e) {
-    statusEl.innerHTML = `<span style="color:#C82346;">⚠️ No se pudo sincronizar: ${escapeHTML(e.message || 'error de red')}. Revisa la URL, la clave y que el flujo este activo en n8n.</span>`;
-  }
-}
-
-(function initSyncUI() {
-  const cfg = loadSyncConfig();
-  const urlEl = document.getElementById('syncUrl');
-  const keyEl = document.getElementById('syncKey');
-  if (urlEl) urlEl.value = cfg.url || '';
-  if (keyEl) keyEl.value = cfg.key || '';
-  document.getElementById('syncSaveBtn').addEventListener('click', () => {
-    const url = urlEl.value.trim();
-    const key = keyEl.value.trim();
-    saveSyncConfig({ url, key });
-    document.getElementById('syncStatus').innerHTML = '<span style="color:#0B8556;">✅ Configuracion guardada en este celular.</span>';
-  });
-  document.getElementById('syncPullBtn').addEventListener('click', syncPull);
-  // Si ya hay URL y clave guardadas, sincroniza sola al abrir la app (sin que haga falta tocar el boton).
-  if (syncConfigured()) syncPull();
-})();
-
-/* ========================
-   HEADER
-   ======================== */
-function updateHeader() {
-  const dateEl = document.getElementById('todayDate');
-  if (dateEl) {
-    const d = new Date().toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' });
-    dateEl.textContent = d.charAt(0).toUpperCase() + d.slice(1);
-  }
-}
-
-/* ========================
-   VIAJE PANAMA (checklist)
-   ======================== */
-const CAT_TRAVEL = {
-  documentos: { emoji: '📄', name: 'Documentos' },
-  medicamentos: { emoji: '💊', name: 'Medicamentos' },
-  playa: { emoji: '🏖️', name: 'Playa' },
-  electronicos: { emoji: '🔌', name: 'Electrónicos' },
-  checklist: { emoji: '📋', name: 'Checklist antes de salir' },
-  ropa: { emoji: '👕', name: 'Ropa' },
-  aseo: { emoji: '🧴', name: 'Aseo personal' },
-  compras: { emoji: '🛒', name: 'Compras pendientes' }
-};
-
-function seedTravel() {
-  const mk = (cat, text, owner, priority) => ({ id: uid(), cat, text, owner, priority, done: false });
-  return [
-    mk('documentos', 'Pasaportes', 'Familia', 'Imprescindible'),
-    mk('documentos', 'Seguros', 'Familia', 'Imprescindible'),
-    mk('documentos', 'Registros civiles', 'Familia', 'Imprescindible'),
-    mk('documentos', 'Tarjetas vacunales de los niños', 'Niños', 'Imprescindible'),
-    mk('medicamentos', 'Eutirox', 'Tati', 'Imprescindible'),
-    mk('medicamentos', 'Medicamentos de John', 'John', 'Imprescindible'),
-    mk('medicamentos', 'Dolex Niños', 'Niños', 'Importante'),
-    mk('playa', 'Colchón inflable', 'Familia', 'Imprescindible'),
-    mk('playa', 'Flotadores', 'Niños', 'Importante'),
-    mk('electronicos', 'Cargadores de celular', 'Familia', 'Imprescindible'),
-    mk('electronicos', 'Tablet', 'Familia', 'Importante'),
-    mk('electronicos', 'Palo para selfies', 'Familia', 'Opcional'),
-    mk('checklist', 'Gafas', 'Familia', 'Importante')
-  ];
-}
-
-function addTravelItem() {
-  const input = document.getElementById('travItem');
-  const text = input.value.trim();
-  if (!text) return;
-  const cat = document.getElementById('travCat').value;
-  const owner = document.getElementById('travOwner').value;
-  const priority = document.getElementById('travPrio').value;
-  state.travel.push({ id: uid(), cat, text, owner, priority, done: false });
-  input.value = '';
-  saveState();
-  renderTravel();
-}
-
-function toggleTravelItem(id) {
-  const it = state.travel.find(x => x.id === id);
-  if (!it) return;
-  it.done = !it.done;
-  saveState();
-  renderTravel();
-  if (it.done) celebrate('¡Listo para el viaje! ✈️');
-}
-
-function deleteTravelItem(id) {
-  state.travel = state.travel.filter(x => x.id !== id);
-  saveState();
-  renderTravel();
-}
-
-function renderTravel() {
-  const catSel = document.getElementById('travCat');
-  if (catSel && !catSel.dataset.filled) {
-    catSel.innerHTML = Object.entries(CAT_TRAVEL).map(([k, v]) => `<option value="${k}">${v.emoji} ${v.name}</option>`).join('');
-    catSel.dataset.filled = '1';
-  }
-
-  const q = (document.getElementById('travSearch').value || '').toLowerCase();
-  const items = state.travel || [];
-  const total = items.length;
-  const done = items.filter(i => i.done).length;
-  document.getElementById('travTotal').textContent = total;
-  document.getElementById('travDone').textContent = done;
-  document.getElementById('travPending').textContent = total - done;
-  document.getElementById('travPct').textContent = (total ? Math.round(done * 100 / total) : 0) + '% listo';
-
-  const critical = items.filter(i => i.priority === 'Imprescindible' && !i.done);
-  const critCard = document.getElementById('travCriticalCard');
-  const critEl = document.getElementById('travCritical');
-  if (critical.length) {
-    critCard.style.display = 'block';
-    critEl.innerHTML = critical.map(i => `
-      <div class="item">
-        <div class="item-body">
-          <div class="item-title">${escapeHTML(i.text)}</div>
-          <div class="item-meta"><span>${escapeHTML(i.owner)}</span><span>${CAT_TRAVEL[i.cat] ? CAT_TRAVEL[i.cat].emoji + ' ' + CAT_TRAVEL[i.cat].name : ''}</span></div>
-        </div>
-      </div>
-    `).join('');
-  } else {
-    critCard.style.display = 'none';
-  }
-
-  const wrap = document.getElementById('travCards');
-  let html = '';
-  Object.keys(CAT_TRAVEL).forEach(cat => {
-    const catItems = items.filter(i => i.cat === cat && (!q || (i.text + ' ' + i.owner).toLowerCase().includes(q)));
-    if (!catItems.length && q) return;
-    const prioClass = (p) => p === 'Imprescindible' ? 'status-late' : p === 'Importante' ? 'status-pending' : 'status-paid';
-    html += `<div class="card">
-      <h2 style="font-size:16px;">${CAT_TRAVEL[cat].emoji} ${CAT_TRAVEL[cat].name}</h2>
-      ${catItems.length ? catItems.map(i => `
-        <div class="item ${i.done ? 'done' : ''}" data-id="${i.id}">
-          <label style="display:flex; align-items:center; gap:10px; flex:1; cursor:pointer;">
-            <input type="checkbox" data-action="trav-toggle" ${i.done ? 'checked' : ''} />
-            <div class="item-body">
-              <div class="item-title">${escapeHTML(i.text)}</div>
-              <div class="item-meta"><span>${escapeHTML(i.owner)}</span><span class="status-tag ${prioClass(i.priority)}">${i.priority}</span></div>
-            </div>
-          </label>
-          <button class="del-btn" data-action="trav-del">✕</button>
-        </div>
-      `).join('') : `<div class="empty"><span class="empty-emoji">🧳</span>Sin artículos en esta categoría.</div>`}
-    </div>`;
-  });
-  wrap.innerHTML = html;
-
-  wrap.querySelectorAll('.item').forEach(el => {
-    const id = el.dataset.id;
-    const chk = el.querySelector('[data-action="trav-toggle"]');
-    if (chk) chk.addEventListener('change', () => toggleTravelItem(id));
-    const del = el.querySelector('[data-action="trav-del"]');
-    if (del) del.addEventListener('click', () => deleteTravelItem(id));
-  });
-}
-
-document.getElementById('addTravBtn').addEventListener('click', addTravelItem);
-document.getElementById('travSearch').addEventListener('input', renderTravel);
-
-/* ========================
-   TABS
-   ======================== */
-document.querySelectorAll('.tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
-    if (tab.dataset.tab === 'dashboard') renderDashboard();
-    if (tab.dataset.tab === 'viaje') renderTravel();
-  });
-});
-
-/* ========================
-   TASKS
-   ======================== */
-const CAT_TASK = {
-  personal: { emoji: '👤', name: 'Personal' },
-  trabajo:  { emoji: '💼', name: 'Trabajo' },
-  casa:     { emoji: '🏠', name: 'Casa' },
-  salud:    { emoji: '💚', name: 'Salud' },
-  ninos:    { emoji: '🧒', name: 'Niños' },
-  ideas:    { emoji: '💡', name: 'Ideas' }
-};
-
-let taskFilter = 'all';
-document.querySelectorAll('#taskFilters .chip').forEach(c => {
-  c.addEventListener('click', () => {
-    document.querySelectorAll('#taskFilters .chip').forEach(x => x.classList.remove('active'));
-    c.classList.add('active');
-    taskFilter = c.dataset.filter;
-    renderTasks();
-  });
-});
-
-document.getElementById('addTaskBtn').addEventListener('click', addTask);
-document.getElementById('taskInput').addEventListener('keydown', e => { if (e.key === 'Enter') addTask(); });
-
-function addTask() {
-  const input = document.getElementById('taskInput');
-  const cat = document.getElementById('taskCat').value;
-  const title = input.value.trim();
-  if (!title) return;
-  const newTask = { id: uid(), title, cat, done: false, starred: false, date: todayISO() };
-  state.tasks.unshift(newTask);
-  input.value = '';
-  saveState();
-  renderTasks();
-  updateHeader();
-  syncPush('add_task', newTask);
-}
-
-function renderTasks() {
-  const list = document.getElementById('taskList');
-  const today = todayISO();
-  let items = state.tasks.filter(t => t.date === today);
-  if (taskFilter === 'pending') items = items.filter(t => !t.done);
-  if (taskFilter === 'done') items = items.filter(t => t.done);
-  if (taskFilter === 'starred') items = items.filter(t => t.starred);
-
-  const total = state.tasks.filter(t => t.date === today).length;
-  const done = state.tasks.filter(t => t.date === today && t.done).length;
-  document.getElementById('taskCount').textContent = `${done} de ${total}`;
-  const pct = total ? Math.round(done / total * 100) : 0;
-  document.getElementById('taskProgress').style.width = pct + '%';
-  document.getElementById('taskEmoji').textContent = pct === 100 && total > 0 ? '🎉' : pct >= 66 ? '🚀' : pct >= 33 ? '💪' : '🌱';
-
-  if (items.length === 0) {
-    list.innerHTML = `<div class="empty"><span class="empty-emoji">${taskFilter === 'done' ? '🌟' : '📝'}</span>${taskFilter === 'done' ? 'Aún no completas ninguna. ¡Vamos!' : 'Nada por acá. Escribe tu primera tarea arriba.'}</div>`;
-    return;
-  }
-
-  list.innerHTML = items.map(t => `
-    <div class="item ${t.done ? 'done' : ''}" data-id="${t.id}">
-      <div class="checkbox ${t.done ? 'checked' : ''}" data-action="toggle"></div>
-      <div class="item-body">
-        <div class="item-title">${escapeHTML(t.title)}</div>
-        <div class="item-meta">
-          <span>${CAT_TASK[t.cat]?.emoji || '📝'} ${CAT_TASK[t.cat]?.name || 'Otro'}</span>
-        </div>
-      </div>
-      <button class="star-btn ${t.starred ? 'active' : ''}" data-action="star">${t.starred ? '⭐' : '☆'}</button>
-      <button class="del-btn" data-action="del">✕</button>
-    </div>
-  `).join('');
-
-  list.querySelectorAll('.item').forEach(el => {
-    const id = el.dataset.id;
-    el.querySelector('[data-action="toggle"]').addEventListener('click', () => toggleTask(id));
-    el.querySelector('[data-action="star"]').addEventListener('click', () => starTask(id));
-    el.querySelector('[data-action="del"]').addEventListener('click', () => deleteTask(id));
-  });
-}
-
-function toggleTask(id) {
-  const t = state.tasks.find(x => x.id === id);
-  if (!t) return;
-  t.done = !t.done;
-  saveState();
-  renderTasks();
-  updateHeader();
-  syncPush('toggle_task', { id: t.id, done: t.done });
-  const today = todayISO();
-  const total = state.tasks.filter(x => x.date === today).length;
-  const done = state.tasks.filter(x => x.date === today && x.done).length;
-  if (total > 0 && done === total) celebrate('¡Lo lograste hoy! 🎉');
-}
-function starTask(id) {
-  const t = state.tasks.find(x => x.id === id);
-  if (!t) return;
-  t.starred = !t.starred;
-  saveState(); renderTasks();
-}
-function deleteTask(id) {
-  state.tasks = state.tasks.filter(x => x.id !== id);
-  saveState(); renderTasks(); updateHeader();
-}
-
-/* ========================
-   EXPENSES
-   ======================== */
-const CAT_EXP = {
-  mercado:     { emoji: '🛒', name: 'Mercado',    color: '#00AEEF' },
-  comida:      { emoji: '🍽️', name: 'Comida',     color: '#FFB88C' },
-  transporte:  { emoji: '🚗', name: 'Transporte', color: '#0072BC' },
-  ocio:        { emoji: '🎬', name: 'Ocio',       color: '#29C5F6' },
-  salud:       { emoji: '🏥', name: 'Salud',      color: '#9FE3FF' },
-  ropa:        { emoji: '👕', name: 'Ropa',       color: '#FFD23F' },
-  hogar:       { emoji: '🏠', name: 'Hogar',      color: '#3D8BC4' },
-  educacion:   { emoji: '📚', name: 'Educación',  color: '#4EC5D1' },
-  regalos:     { emoji: '🎁', name: 'Regalos',    color: '#5AC8FA' },
-  otros:       { emoji: '💡', name: 'Otros',      color: '#5B5680' }
-};
-
-document.getElementById('expDate').value = todayISO();
-document.getElementById('addExpBtn').addEventListener('click', addExpense);
-
-function addExpense() {
-  const desc = document.getElementById('expDesc').value.trim();
-  const amount = parseFloat(document.getElementById('expAmount').value);
-  const cat = document.getElementById('expCat').value;
-  const date = document.getElementById('expDate').value || todayISO();
-  if (!desc || !amount || amount <= 0) return;
-  const newExpense = { id: uid(), desc, amount, cat, date };
-  state.expenses.unshift(newExpense);
-  document.getElementById('expDesc').value = '';
-  document.getElementById('expAmount').value = '';
-  saveState();
-  renderExpenses();
-  syncPush('add_expense', newExpense);
-}
-
-function renderExpenses() {
-  const list = document.getElementById('expList');
-  const today = todayISO();
-  const now = new Date();
-  const monthStr = now.toLocaleDateString('es-CO', { month: 'long', year: 'numeric' });
-  document.getElementById('expMonthLabel').textContent = monthStr.charAt(0).toUpperCase() + monthStr.slice(1);
-
-  const todayExp = state.expenses.filter(e => e.date === today);
-  const todayTotal = todayExp.reduce((s, e) => s + e.amount, 0);
-  document.getElementById('expToday').textContent = fmt(todayTotal);
-  document.getElementById('expTodayCount').textContent = `${todayExp.length} movimiento${todayExp.length === 1 ? '' : 's'}`;
-
-  const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate() - 7);
-  const weekTotal = state.expenses.filter(e => new Date(e.date) >= weekAgo).reduce((s, e) => s + e.amount, 0);
-  document.getElementById('expWeek').textContent = fmt(weekTotal);
-
-  const mo = now.getMonth(), yr = now.getFullYear();
-  const monthTotal = state.expenses.filter(e => {
-    const d = new Date(e.date);
-    return d.getMonth() === mo && d.getFullYear() === yr;
-  }).reduce((s, e) => s + e.amount, 0);
-  document.getElementById('expMonth').textContent = fmt(monthTotal);
-
-  const recent = state.expenses.slice(0, 30);
-  if (recent.length === 0) {
-    list.innerHTML = `<div class="empty"><span class="empty-emoji">💸</span>Aún no hay gastos registrados. Agrega el primero arriba.</div>`;
-    return;
-  }
-  list.innerHTML = recent.map(e => `
-    <div class="item" data-id="${e.id}">
-      <div style="width: 40px; height: 40px; border-radius: 12px; background: ${CAT_EXP[e.cat]?.color || '#5B5680'}22; display: grid; place-items: center; font-size: 18px; flex-shrink: 0;">${CAT_EXP[e.cat]?.emoji || '💡'}</div>
-      <div class="item-body">
-        <div class="item-title">${escapeHTML(e.desc)}</div>
-        <div class="item-meta">
-          <span>${CAT_EXP[e.cat]?.name || 'Otros'}</span>
-          <span>·</span>
-          <span>${formatDate(e.date)}</span>
-        </div>
-      </div>
-      <div class="amount">${fmt(e.amount)}</div>
-      <button class="del-btn" data-action="del-exp">✕</button>
-    </div>
-  `).join('');
-  list.querySelectorAll('[data-action="del-exp"]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const id = btn.closest('.item').dataset.id;
-      state.expenses = state.expenses.filter(x => x.id !== id);
-      saveState(); renderExpenses();
-    });
-  });
-}
-
-function formatDate(iso) {
-  const d = new Date(iso + 'T00:00');
-  return d.toLocaleDateString('es-CO', { day: 'numeric', month: 'short' });
-}
-
-/* ========================
-   MONTHLY PAYMENTS
-   ======================== */
-const CAT_PAY = {
-  tarjetas:      { emoji: '💳', name: 'Tarjetas de crédito', cls: 'cat-tarjetas', color: '#00AEEF' },
-  servicios:     { emoji: '🏠', name: 'Servicios del hogar', cls: 'cat-servicios', color: '#4EC5D1' },
-  creditos:      { emoji: '🏦', name: 'Créditos',            cls: 'cat-creditos', color: '#0072BC' },
-  suscripciones: { emoji: '📱', name: 'Suscripciones',       cls: 'cat-suscripciones', color: '#29C5F6' },
-  colegio:       { emoji: '🎓', name: 'Colegio niños',       cls: 'cat-colegio', color: '#FFD23F' },
-  otros:         { emoji: '✨', name: 'Otros',               cls: 'cat-otros', color: '#5B5680' }
-};
-
-document.getElementById('addPayBtn').addEventListener('click', () => document.getElementById('payModal').classList.add('on'));
-document.getElementById('pmCancel').addEventListener('click', () => document.getElementById('payModal').classList.remove('on'));
-document.getElementById('pmSave').addEventListener('click', savePayment);
-
-document.getElementById('resetMonthBtn').addEventListener('click', () => document.getElementById('resetModal').classList.add('on'));
-document.getElementById('resetCancel').addEventListener('click', () => document.getElementById('resetModal').classList.remove('on'));
-document.getElementById('resetConfirm').addEventListener('click', () => {
-  state.payments.forEach(p => { p.paid = false; p.paidAt = null; });
-  state.monthResetAt = todayISO();
-  saveState();
-  document.getElementById('resetModal').classList.remove('on');
-  renderPayments();
-  celebrate('Nuevo mes, nuevas metas 🎯');
-});
-
-function savePayment() {
-  const name = document.getElementById('pmName').value.trim();
-  const cat = document.getElementById('pmCat').value;
-  const amount = parseFloat(document.getElementById('pmAmount').value) || 0;
-  const day = parseInt(document.getElementById('pmDay').value) || 1;
-  if (!name) return;
-  state.payments.push({ id: uid(), name, cat, amount, day, paid: false });
-  document.getElementById('pmName').value = '';
-  document.getElementById('pmAmount').value = '';
-  document.getElementById('pmDay').value = '';
-  saveState();
-  document.getElementById('payModal').classList.remove('on');
-  renderPayments();
-}
-
-function renderPayments() {
-  const container = document.getElementById('payGroups');
-  const total = state.payments.reduce((s, p) => s + (p.amount || 0), 0);
-  const paidTotal = state.payments.filter(p => p.paid).reduce((s, p) => s + (p.amount || 0), 0);
-  const pendingTotal = total - paidTotal;
-  const paidCount = state.payments.filter(p => p.paid).length;
-
-  document.getElementById('payTotal').textContent = fmt(total);
-  document.getElementById('payPaid').textContent = fmt(paidTotal);
-  document.getElementById('payPaidCount').textContent = `${paidCount} de ${state.payments.length} pagos`;
-  document.getElementById('payPending').textContent = fmt(pendingTotal);
-  document.getElementById('payPendingCount').textContent = `${state.payments.length - paidCount} pendientes`;
-
-  const pct = total ? Math.round(paidTotal / total * 100) : 0;
-  document.getElementById('payProgress').style.width = pct + '%';
-  document.getElementById('payProgressLabel').textContent = pct + '%';
-
-  const groups = {};
-  state.payments.forEach(p => { (groups[p.cat] = groups[p.cat] || []).push(p); });
-
-  const todayDay = new Date().getDate();
-
-  container.innerHTML = Object.keys(CAT_PAY).map(catKey => {
-    const items = groups[catKey] || [];
-    if (items.length === 0) return '';
-    const catTotal = items.reduce((s, p) => s + (p.amount || 0), 0);
-    return `
-      <div class="cat-group">
-        <div class="cat-header ${CAT_PAY[catKey].cls}">
-          <h3>${CAT_PAY[catKey].emoji} ${CAT_PAY[catKey].name}</h3>
-          <span class="cat-total">${fmt(catTotal)}</span>
-        </div>
-        ${items.map(p => {
-          const late = !p.paid && p.day < todayDay;
-          const soon = !p.paid && p.day >= todayDay && p.day <= todayDay + 3;
-          const statusHTML = p.paid
-            ? `<span class="status-tag status-paid">Pagado</span>`
-            : late ? `<span class="status-tag status-late">Vencido</span>`
-            : soon ? `<span class="status-tag status-pending">Próximo</span>`
-            : `<span class="status-tag status-pending">Pendiente</span>`;
-          return `
-            <div class="item ${p.paid ? 'done' : ''}" data-id="${p.id}">
-              <div class="checkbox ${p.paid ? 'checked' : ''}" data-action="pay-toggle"></div>
-              <div class="item-body">
-                <div class="item-title">${escapeHTML(p.name)}</div>
-                <div class="item-meta">
-                  <span class="day-badge">Día ${p.day}</span>
-                  ${statusHTML}
-                </div>
-              </div>
-              <div class="amount">${fmt(p.amount)}</div>
-              <button class="del-btn" data-action="pay-edit" title="Editar monto">✎</button>
-              <button class="del-btn" data-action="pay-del">✕</button>
-            </div>
-          `;
-        }).join('')}
-      </div>
-    `;
-  }).join('');
-
-  container.querySelectorAll('.item').forEach(el => {
-    const id = el.dataset.id;
-    el.querySelector('[data-action="pay-toggle"]').addEventListener('click', () => togglePayment(id));
-    el.querySelector('[data-action="pay-del"]').addEventListener('click', () => deletePayment(id));
-    el.querySelector('[data-action="pay-edit"]').addEventListener('click', () => editPayment(id));
-  });
-}
-
-function togglePayment(id) {
-  const p = state.payments.find(x => x.id === id);
-  if (!p) return;
-  p.paid = !p.paid;
-  p.paidAt = p.paid ? todayISO() : null;
-  saveState(); renderPayments();
-  syncPush('toggle_payment', { name: p.name, paid: p.paid });
-  const total = state.payments.length;
-  const paid = state.payments.filter(x => x.paid).length;
-  if (total > 0 && paid === total) celebrate('¡Mes cuadrado! 🏆');
-}
-function deletePayment(id) {
-  state.payments = state.payments.filter(x => x.id !== id);
-  saveState(); renderPayments();
-}
-function editPayment(id) {
-  const p = state.payments.find(x => x.id === id);
-  if (!p) return;
-  const newAmount = prompt(`Monto de "${p.name}":`, p.amount);
-  if (newAmount === null) return;
-  const n = parseFloat(newAmount);
-  if (!isNaN(n) && n >= 0) { p.amount = n; saveState(); renderPayments(); }
-}
-
-/* ========================
-   MERCADO / LISTA DE COMPRAS
-   ======================== */
-document.getElementById('addMktBtn').addEventListener('click', addMktItem);
-document.getElementById('mktItem').addEventListener('keydown', e => { if (e.key === 'Enter') addMktItem(); });
-document.getElementById('mktQty').addEventListener('keydown', e => { if (e.key === 'Enter') addMktItem(); });
-
-document.getElementById('newListBtn').addEventListener('click', () => {
-  const name = prompt('Nombre de la nueva lista:', 'Nueva lista');
-  if (!name) return;
-  const id = uid();
-  state.market[id] = { id, name, items: [] };
-  state.activeList = id;
-  saveState();
-  renderMarket();
-});
-
-document.getElementById('renameListBtn').addEventListener('click', () => {
-  const list = state.market[state.activeList];
-  if (!list) return;
-  const name = prompt('Nuevo nombre:', list.name);
-  if (!name) return;
-  list.name = name;
-  saveState();
-  renderMarket();
-});
-
-document.getElementById('delListBtn').addEventListener('click', () => {
-  const list = state.market[state.activeList];
-  if (!list) return;
-  if (Object.keys(state.market).length === 1) {
-    alert('Debes tener al menos una lista. Puedes desmarcar todos los items en su lugar.');
-    return;
-  }
-  if (!confirm(`¿Borrar la lista "${list.name}"?`)) return;
-  delete state.market[state.activeList];
-  state.activeList = Object.keys(state.market)[0];
-  saveState();
-  renderMarket();
-});
-
-document.getElementById('mktListPicker').addEventListener('change', (e) => {
-  state.activeList = e.target.value;
-  saveState();
-  renderMarket();
-});
-
-document.getElementById('mktUncheckAll').addEventListener('click', () => {
-  const list = state.market[state.activeList];
-  if (!list) return;
-  list.items.forEach(i => i.done = false);
-  saveState(); renderMarket();
-});
-
-document.getElementById('mktCopy').addEventListener('click', () => {
-  const text = buildMarketText();
-  navigator.clipboard.writeText(text).then(() => {
-    celebrate('Copiada al portapapeles 📋');
-  }).catch(() => {
-    // fallback
-    const ta = document.createElement('textarea');
-    ta.value = text; document.body.appendChild(ta);
-    ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
-    celebrate('Copiada al portapapeles 📋');
-  });
-});
-
-document.getElementById('mktDownload').addEventListener('click', () => {
-  const list = state.market[state.activeList];
-  const text = buildMarketText();
-  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `${(list?.name || 'mercado').replace(/[^a-z0-9áéíóúñ ]/gi, '')}.txt`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-});
-
-document.getElementById('mktWhatsapp').addEventListener('click', () => {
-  const text = buildMarketText();
-  const url = 'https://wa.me/?text=' + encodeURIComponent(text);
-  window.open(url, '_blank');
-});
-
-document.getElementById('mktWhatsappAll').addEventListener('click', () => {
-  const parts = [];
-  Object.values(state.market).forEach(list => {
-    if (list.items.length === 0) return;
-    parts.push(`🛒 *${list.name}*`);
-    const pending = list.items.filter(i => !i.done);
-    pending.forEach(i => parts.push(`• ${i.name}${i.qty ? ' — ' + i.qty : ''}`));
-    parts.push('');
-  });
-  const text = parts.join('\n').trim() || 'Lista de mercado vacía';
-  const url = 'https://wa.me/?text=' + encodeURIComponent(text);
-  window.open(url, '_blank');
-});
-
-function addMktItem() {
-  const list = state.market[state.activeList];
-  if (!list) return;
-  const name = document.getElementById('mktItem').value.trim();
-  const qty = document.getElementById('mktQty').value.trim();
-  if (!name) return;
-  const newItem = { id: uid(), name, qty, done: false };
-  list.items.push(newItem);
-  document.getElementById('mktItem').value = '';
-  document.getElementById('mktQty').value = '';
-  saveState();
-  renderMarket();
-  syncPush('add_market', { id: newItem.id, product: newItem.name, quantity: newItem.qty, list: list.name });
-}
-
-function buildMarketText() {
-  const list = state.market[state.activeList];
-  if (!list) return '';
-  const lines = [`🛒 ${list.name}`, ''];
-  const pending = list.items.filter(i => !i.done);
-  const done = list.items.filter(i => i.done);
-  pending.forEach(i => lines.push(`• ${i.name}${i.qty ? ' — ' + i.qty : ''}`));
-  if (done.length) {
-    lines.push('', 'Ya comprados:');
-    done.forEach(i => lines.push(`✓ ${i.name}${i.qty ? ' — ' + i.qty : ''}`));
-  }
-  return lines.join('\n');
-}
-
-function renderMarket() {
-  const picker = document.getElementById('mktListPicker');
-  picker.innerHTML = Object.values(state.market).map(l =>
-    `<option value="${l.id}" ${l.id === state.activeList ? 'selected' : ''}>📋 ${escapeHTML(l.name)} · ${l.items.length} items</option>`
-  ).join('');
-
-  const list = state.market[state.activeList];
-  const container = document.getElementById('mktList');
-  if (!list) { container.innerHTML = ''; return; }
-
-  const total = list.items.length;
-  const done = list.items.filter(i => i.done).length;
-  document.getElementById('mktTotal').textContent = total;
-  document.getElementById('mktDone').textContent = done;
-  document.getElementById('mktPending').textContent = total - done;
-  document.getElementById('mktLists').textContent = `${Object.keys(state.market).length} lista${Object.keys(state.market).length === 1 ? '' : 's'}`;
-  document.getElementById('mktDoneHint').textContent = total === 0 ? 'Agrega tu primer item' : done === total ? '¡Todo listo! 🎉' : 'Sigue así 🛒';
-
-  if (list.items.length === 0) {
-    container.innerHTML = `<div class="empty"><span class="empty-emoji">🥬</span>Esta lista está vacía. Agrega tu primer item arriba.</div>`;
-    return;
-  }
-
-  container.innerHTML = list.items.map(i => `
-    <div class="item ${i.done ? 'done' : ''}" data-id="${i.id}">
-      <div class="checkbox ${i.done ? 'checked' : ''}" data-action="mkt-toggle"></div>
-      <div class="item-body">
-        <div class="item-title">${escapeHTML(i.name)}</div>
-        ${i.qty ? `<div class="item-meta"><span>${escapeHTML(i.qty)}</span></div>` : ''}
-      </div>
-      <button class="del-btn" data-action="mkt-edit" title="Editar">✎</button>
-      <button class="del-btn" data-action="mkt-del">✕</button>
-    </div>
-  `).join('');
-
-  container.querySelectorAll('.item').forEach(el => {
-    const id = el.dataset.id;
-    el.querySelector('[data-action="mkt-toggle"]').addEventListener('click', () => toggleMkt(id));
-    el.querySelector('[data-action="mkt-del"]').addEventListener('click', () => delMkt(id));
-    el.querySelector('[data-action="mkt-edit"]').addEventListener('click', () => editMkt(id));
-  });
-}
-
-function toggleMkt(id) {
-  const list = state.market[state.activeList];
-  const item = list.items.find(x => x.id === id);
-  if (!item) return;
-  item.done = !item.done;
-  saveState(); renderMarket();
-  syncPush('toggle_market', { id: item.id, done: item.done });
-  const total = list.items.length;
-  const done = list.items.filter(x => x.done).length;
-  if (total > 0 && done === total) celebrate('¡Lista completa! 🛒');
-}
-function delMkt(id) {
-  const list = state.market[state.activeList];
-  list.items = list.items.filter(x => x.id !== id);
-  saveState(); renderMarket();
-}
-function editMkt(id) {
-  const list = state.market[state.activeList];
-  const item = list.items.find(x => x.id === id);
-  if (!item) return;
-  const name = prompt('Item:', item.name);
-  if (name === null) return;
-  const qty = prompt('Cantidad:', item.qty || '');
-  if (qty === null) return;
-  item.name = name.trim() || item.name;
-  item.qty = qty.trim();
-  saveState(); renderMarket();
-}
-
-/* ========================
-   DASHBOARD
-   ======================== */
-let chartPie, chartBar, chartPay;
-
-function renderDashboard() {
-  const now = new Date();
-  const mo = now.getMonth(), yr = now.getFullYear();
-  const monthExp = state.expenses.filter(e => {
-    const d = new Date(e.date + 'T00:00');
-    return d.getMonth() === mo && d.getFullYear() === yr;
-  });
-  const monthTotal = monthExp.reduce((s, e) => s + e.amount, 0);
-  document.getElementById('dashMonth').textContent = fmt(monthTotal);
-
-  // biggest cat
-  const byCat = {};
-  monthExp.forEach(e => { byCat[e.cat] = (byCat[e.cat] || 0) + e.amount; });
-  const top = Object.entries(byCat).sort((a, b) => b[1] - a[1])[0];
-  document.getElementById('dashMonthCat').textContent = top ? `Más en ${CAT_EXP[top[0]]?.name || '—'}` : 'Sin gastos aún';
-
-  // fixed
-  const fixedTotal = state.payments.reduce((s, p) => s + (p.amount || 0), 0);
-  const fixedPaid = state.payments.filter(p => p.paid).reduce((s, p) => s + (p.amount || 0), 0);
-  document.getElementById('dashFixed').textContent = fmt(fixedTotal);
-  const pct = fixedTotal ? Math.round(fixedPaid / fixedTotal * 100) : 0;
-  document.getElementById('dashFixedProgress').textContent = `${pct}% pagado`;
-
-  document.getElementById('dashTotal').textContent = fmt(monthTotal + fixedTotal);
-
-  const today = todayISO();
-  const tTotal = state.tasks.filter(t => t.date === today).length;
-  const tDone = state.tasks.filter(t => t.date === today && t.done).length;
-  document.getElementById('dashTasks').textContent = `${tDone}/${tTotal}`;
-  document.getElementById('dashTasksHint').textContent = tTotal === 0 ? 'Agrega tareas hoy' : tDone === tTotal ? '¡Todo listo! 🎉' : 'Sigue así ✨';
-
-  // pie
-  const pieLabels = Object.keys(byCat).map(k => CAT_EXP[k]?.name || k);
-  const pieData = Object.values(byCat);
-  const pieColors = Object.keys(byCat).map(k => CAT_EXP[k]?.color || '#5B5680');
-  if (chartPie) chartPie.destroy();
-  chartPie = new Chart(document.getElementById('chartPie'), {
-    type: 'doughnut',
-    data: { labels: pieLabels, datasets: [{ data: pieData, backgroundColor: pieColors, borderWidth: 0 }] },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: {
-        legend: { position: 'bottom', labels: { font: { family: 'Plus Jakarta Sans', size: 12 }, padding: 12, usePointStyle: true } },
-        tooltip: { callbacks: { label: (ctx) => `${ctx.label}: ${fmt(ctx.parsed)}` } }
-      },
-      cutout: '60%'
-    }
-  });
-
-  // bar last 7 days
-  const days = [];
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date(); d.setDate(d.getDate() - i);
-    const iso = d.toISOString().slice(0, 10);
-    const total = state.expenses.filter(e => e.date === iso).reduce((s, e) => s + e.amount, 0);
-    days.push({ label: d.toLocaleDateString('es-CO', { weekday: 'short', day: 'numeric' }), total });
-  }
-  if (chartBar) chartBar.destroy();
-  chartBar = new Chart(document.getElementById('chartBar'), {
-    type: 'bar',
-    data: {
-      labels: days.map(d => d.label),
-      datasets: [{
-        data: days.map(d => d.total),
-        backgroundColor: (ctx) => {
-          const c = ctx.chart.ctx;
-          const g = c.createLinearGradient(0, 0, 0, 250);
-          g.addColorStop(0, '#00AEEF'); g.addColorStop(1, '#0072BC');
-          return g;
-        },
-        borderRadius: 10, borderSkipped: false, maxBarThickness: 42
-      }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: { callbacks: { label: (ctx) => fmt(ctx.parsed.y) } } },
-      scales: {
-        x: { grid: { display: false }, ticks: { font: { family: 'Plus Jakarta Sans' } } },
-        y: { grid: { color: '#F0EDF7' }, ticks: { font: { family: 'Plus Jakarta Sans' }, callback: (v) => v >= 1000 ? (v/1000)+'k' : v } }
-      }
-    }
-  });
-
-  // pagos fijos por categoria
-  const payByCat = {};
-  state.payments.forEach(p => { payByCat[p.cat] = (payByCat[p.cat] || 0) + (p.amount || 0); });
-  const payLabels = Object.keys(payByCat).filter(k => payByCat[k] > 0).map(k => CAT_PAY[k]?.name || k);
-  const payValues = Object.keys(payByCat).filter(k => payByCat[k] > 0).map(k => payByCat[k]);
-  const payColors = Object.keys(payByCat).filter(k => payByCat[k] > 0).map(k => CAT_PAY[k]?.color || '#5B5680');
-  if (chartPay) chartPay.destroy();
-  chartPay = new Chart(document.getElementById('chartPay'), {
-    type: 'bar',
-    data: {
-      labels: payLabels,
-      datasets: [{ data: payValues, backgroundColor: payColors, borderRadius: 12, borderSkipped: false, maxBarThickness: 60 }]
-    },
-    options: {
-      indexAxis: 'y',
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: { callbacks: { label: (ctx) => fmt(ctx.parsed.x) } } },
-      scales: {
-        x: { grid: { color: '#F0EDF7' }, ticks: { font: { family: 'Plus Jakarta Sans' }, callback: (v) => v >= 1000000 ? (v/1000000).toFixed(1)+'M' : v >= 1000 ? (v/1000)+'k' : v } },
-        y: { grid: { display: false }, ticks: { font: { family: 'Plus Jakarta Sans', size: 12 } } }
-      }
-    }
-  });
-}
-
-/* ========================
-   HELPERS
-   ======================== */
-function escapeHTML(s) {
-  return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-}
-
-function celebrate(msg) {
-  const el = document.getElementById('celebrate');
-  document.getElementById('celebrateMsg').textContent = msg;
-  el.classList.add('on');
-  setTimeout(() => el.classList.remove('on'), 1800);
-}
-
-/* ========================
-   CAPTURA RAPIDA + RESPALDO
-   ======================== */
-function guessExpCat(t) {
-  const map = [
-    ['mercado', /mercado|verdura|fruta|super|tienda|plaza|frut/],
-    ['comida', /comida|almuerzo|desayuno|cena|restaurante|domicilio|rappi|pizza|caf[eé]|helado|pan\b/],
-    ['transporte', /transporte|uber|taxi|didi|bus|gasolina|combustible|pasaje|parqueadero|peaje|sitp/],
-    ['ocio', /ocio|cine|netflix|salida|bar|fiesta|juego|paseo|concierto/],
-    ['salud', /salud|farmacia|droga|m[eé]dic|medicina|eps|examen|cita/],
-    ['ropa', /ropa|zapato|camisa|vestido|tenis|blusa|pantal[oó]n/],
-    ['hogar', /hogar|mueble|reparaci|ferreter|aseo|dom[eé]stic/],
-    ['educacion', /educaci|colegio|curso|libro|matr[ií]cula|clase/],
-    ['regalos', /regalo|cumplea|detalle/]
-  ];
-  for (const [c, re] of map) { if (re.test(t)) return c; }
-  return 'otros';
-}
-function guessTaskCat(t) {
-  if (/trabajo|reuni[oó]n|jefe|cliente|correo|email|informe|oficina/.test(t)) return 'trabajo';
-  if (/limpiar|lavar|cocina|arreglar|casa|hogar|planchar|barrer/.test(t)) return 'casa';
-  if (/salud|m[eé]dico|cita|ejercicio|gym|caminar|medicina/.test(t)) return 'salud';
-  if (/ni[ñn]o|hijo|hija|colegio|jard[ií]n|pediatra|tarea escolar/.test(t)) return 'ninos';
-  if (/idea|proyecto|pensar|anotar|planear/.test(t)) return 'ideas';
-  return 'personal';
-}
-
-function parseQuick(raw) {
-  raw = (raw || '').trim();
-  if (!raw) return { ok: false, msg: 'Escribe algo primero.' };
-  const low = raw.toLowerCase();
-
-  // amount detection
-  const m = low.match(/\$?\s*(\d[\d.,]*)\s*(mil|k)?/);
-  let amount = 0, hasAmount = false;
-  if (m) {
-    let num = m[1].replace(/[.,]/g, '');
-    amount = parseInt(num, 10) || 0;
-    if (m[2]) amount *= 1000;
-    hasAmount = amount > 0;
-  }
-  const expenseWords = /(gast|compr|pagu|pagué|\$)/i;
-  const payWords = /(pagu|pagué)/i;
-
-  // explicit: tarea
-  if (/^(tarea|todo|pendiente)\b[:\-\s]*/i.test(raw)) {
-    const title = raw.replace(/^(tarea|todo|pendiente)\b[:\-\s]*/i, '').trim();
-    if (!title) return { ok: false, msg: 'La tarea esta vacia.' };
-    state.tasks.unshift({ id: uid(), title, cat: guessTaskCat(low), done: false, starred: false, date: todayISO() });
-    saveState(); renderTasks(); updateHeader();
-    return { ok: true, msg: '✨ Tarea agregada: ' + title };
-  }
-  // explicit: mercado / comprar / lista
-  if (/^(mercado|comprar|lista)\b[:\-\s]*/i.test(raw)) {
-    const rest = raw.replace(/^(mercado|comprar|lista)\b[:\-\s]*/i, '').trim();
-    const items = rest.split(/[,;\n]+/).map(x => x.trim()).filter(Boolean);
-    if (!items.length) return { ok: false, msg: 'No hay items para agregar.' };
-    const list = state.market[state.activeList];
-    items.forEach(it => {
-      let name = it, qty = '';
-      const q = it.match(/^(.*?)\s+[-–x]\s+(.+)$/);
-      if (q) { name = q[1].trim(); qty = q[2].trim(); }
-      list.items.push({ id: uid(), name, qty, done: false });
-    });
-    saveState(); renderMarket();
-    return { ok: true, msg: '🛒 ' + items.length + ' item(s) agregado(s) a ' + list.name };
-  }
-  // expense with amount
-  if (hasAmount && expenseWords.test(low)) {
-    const payMatch = state.payments.find(pp => low.includes(pp.name.toLowerCase()));
-    if (payWords.test(low) && payMatch) {
-      payMatch.paid = true; payMatch.paidAt = todayISO();
-      if (!payMatch.amount) payMatch.amount = amount;
-      saveState(); renderPayments();
-      return { ok: true, msg: '✅ Pago marcado: ' + payMatch.name + ' (' + fmt(amount) + ')' };
-    }
-    let desc = raw.replace(m[0], ' ').replace(/\b(gast[eé]?|gaste|compr[eé]?|compre|pagu[eé]|pague)\b/gi, ' ').replace(/\ben\b/gi, ' ').replace(/\s+/g, ' ').trim();
-    desc = desc.replace(/^[\s:,\-]+|[\s:,\-]+$/g, '') || 'Gasto';
-    const cat = guessExpCat(low);
-    state.expenses.unshift({ id: uid(), desc, amount, cat, date: todayISO() });
-    saveState(); renderExpenses();
-    return { ok: true, msg: '💸 Gasto agregado: ' + fmt(amount) + ' · ' + desc };
-  }
-  // mark fixed payment paid without amount
-  if (payWords.test(low)) {
-    const payMatch = state.payments.find(pp => low.includes(pp.name.toLowerCase()));
-    if (payMatch) {
-      payMatch.paid = true; payMatch.paidAt = todayISO();
-      saveState(); renderPayments();
-      return { ok: true, msg: '✅ Pago marcado: ' + payMatch.name };
-    }
-  }
-  // default -> task
-  state.tasks.unshift({ id: uid(), title: raw, cat: guessTaskCat(low), done: false, starred: false, date: todayISO() });
-  saveState(); renderTasks(); updateHeader();
-  return { ok: true, msg: '✨ Tarea agregada: ' + raw };
-}
-
-function runQuick() {
-  const inp = document.getElementById('quickInput');
-  const res = parseQuick(inp.value);
-  const box = document.getElementById('quickResult');
-  const color = res.ok ? '#0B8556' : '#C82346';
-  const bg = res.ok ? '#DCF7ED' : '#FFDCE0';
-  box.innerHTML = '<div style="padding:12px 16px;border-radius:12px;background:' + bg + ';color:' + color + ';font-weight:600;font-size:14px;">' + escapeHTML(res.msg) + '</div>';
-  if (res.ok) inp.value = '';
-  inp.focus();
-}
-
-document.getElementById('quickBtn').addEventListener('click', runQuick);
-document.getElementById('quickInput').addEventListener('keydown', e => { if (e.key === 'Enter') runQuick(); });
-document.querySelectorAll('#quickExamples .chip').forEach(c => {
-  c.addEventListener('click', () => { document.getElementById('quickInput').value = c.dataset.ex; document.getElementById('quickInput').focus(); });
-});
-
-// RESPALDO
-document.getElementById('backupExport').addEventListener('click', () => {
-  const data = JSON.stringify(state, null, 2);
-  const blob = new Blob([data], { type: 'application/json;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'mi-dia-respaldo-' + todayISO() + '.json';
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  celebrate('Respaldo descargado 💾');
-});
-document.getElementById('backupImportBtn').addEventListener('click', () => document.getElementById('backupFile').click());
-document.getElementById('backupFile').addEventListener('change', (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    try {
-      const obj = JSON.parse(ev.target.result);
-      if (!obj || typeof obj !== 'object') throw new Error('formato');
-      state = Object.assign({}, state, obj);
-      if (!state.market || !Object.keys(state.market).length) { const seeds = seedMarket(); state.market = {}; seeds.forEach(x => state.market[x.id] = x); state.activeList = seeds[0].id; }
-      if (!state.activeList || !state.market[state.activeList]) state.activeList = Object.keys(state.market)[0];
-      saveState();
-      renderTasks(); renderExpenses(); renderPayments(); renderMarket(); updateHeader();
-      celebrate('Respaldo restaurado ✅');
-    } catch (err) {
-      alert('No se pudo leer el archivo. Asegurate de que sea un respaldo valido de Mi Dia (.json).');
-    }
-  };
-  reader.readAsText(file);
-  e.target.value = '';
-});
-
-/* ========================
-   ESCANEAR FACTURA / RECIBO
-   ======================== */
-if (window.pdfjsLib) {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
-}
-
-function guessVendorAndTotal(text) {
-  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
-  // total: busca lineas con palabras clave y un numero
-  const totalWords = /(total|total a pagar|valor total|monto total|gran total|pago total|total factura)/i;
-  let bestAmount = 0;
-  lines.forEach(l => {
-    if (totalWords.test(l)) {
-      const nums = l.match(/[\d.,]{3,}/g);
-      if (nums) {
-        nums.forEach(n => {
-          const clean = n.replace(/[^\d]/g, '');
-          const v = parseInt(clean, 10) || 0;
-          if (v > bestAmount) bestAmount = v;
-        });
-      }
-    }
-  });
-  // fallback: numero mas grande de todo el texto (formato tipico de moneda)
-  if (!bestAmount) {
-    const allNums = text.match(/[\d]{1,3}(?:[.,]\d{3})+(?:[.,]\d{2})?/g) || [];
-    allNums.forEach(n => {
-      const clean = n.replace(/[.,](?=\d{3})/g, '').replace(/[.,]\d{2}$/, '');
-      const v = parseInt(clean.replace(/[^\d]/g, ''), 10) || 0;
-      if (v > bestAmount) bestAmount = v;
-    });
-  }
-  // fecha: dd/mm/yyyy o yyyy-mm-dd
-  let dateISO = todayISO();
-  const dm = text.match(/(\d{4})-(\d{2})-(\d{2})/) || text.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/);
-  if (dm) {
-    try {
-      if (dm[0].includes('-') && dm[1].length === 4) {
-        dateISO = dm[0];
-      } else {
-        let [ , d, m, y ] = dm;
-        if (y.length === 2) y = '20' + y;
-        d = d.padStart(2, '0'); m = m.padStart(2, '0');
-        const candidate = `${y}-${m}-${d}`;
-        if (!isNaN(new Date(candidate).getTime())) dateISO = candidate;
-      }
-    } catch(e) {}
-  }
-  // comercio: primera linea no vacia con letras, evitando NIT/fecha
-  let vendor = '';
-  for (const l of lines.slice(0, 6)) {
-    if (/^[a-zA-ZÀ-ÿ\s.&'-]{3,40}$/.test(l) && !/factura|recibo|nit|total/i.test(l)) { vendor = l; break; }
-  }
-  return { amount: bestAmount, date: dateISO, vendor: vendor || 'Factura escaneada' };
-}
-
-function openScanForm(data, rawText) {
-  document.getElementById('scanFormWrap').style.display = 'block';
-  document.getElementById('scanDesc').value = data.vendor;
-  document.getElementById('scanAmount').value = data.amount || '';
-  document.getElementById('scanCat').value = guessExpCat((data.vendor || '').toLowerCase());
-  document.getElementById('scanDate').value = data.date;
-  document.getElementById('scanRawText').textContent = rawText || '(sin texto)';
-}
-
-async function processScanFile(file) {
-  const statusEl = document.getElementById('scanStatus');
-  document.getElementById('scanFormWrap').style.display = 'none';
-  statusEl.innerHTML = '<div style="color:var(--slate);font-size:13px;">⏳ Leyendo el archivo, un momento...</div>';
-  try {
-    let text = '';
-    if (file.type === 'application/pdf') {
-      const buf = await file.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
-      for (let i = 1; i <= pdf.numPages; i++) {
-        const page = await pdf.getPage(i);
-        const content = await page.getTextContent();
-        text += content.items.map(it => it.str).join(' ') + '\n';
-      }
-      if (!text.trim()) {
-        statusEl.innerHTML = '<div style="color:#C82346;font-size:13px;">Este PDF no tiene texto seleccionable (parece ser una imagen escaneada). Intenta con una foto en su lugar.</div>';
-        return;
-      }
-    } else if (file.type.startsWith('image/')) {
-      const { data } = await Tesseract.recognize(file, 'spa', {
-        logger: m => { if (m.status === 'recognizing text') statusEl.innerHTML = `<div style="color:var(--slate);font-size:13px;">⏳ Leyendo imagen... ${Math.round((m.progress||0)*100)}%</div>`; }
-      });
-      text = data.text || '';
-    } else {
-      statusEl.innerHTML = '<div style="color:#C82346;font-size:13px;">Formato no soportado. Usa una foto (jpg/png) o un PDF.</div>';
-      return;
-    }
-    const guess = guessVendorAndTotal(text);
-    statusEl.innerHTML = '<div style="color:#0B8556;font-size:13px;font-weight:600;">✅ Listo, revisa y confirma los datos abajo.</div>';
-    openScanForm(guess, text);
-  } catch (err) {
-    statusEl.innerHTML = '<div style="color:#C82346;font-size:13px;">No se pudo leer el archivo. Intenta con otra foto o PDF.</div>';
-  }
-}
-
-document.getElementById('scanFile').addEventListener('change', (e) => {
-  const f = e.target.files[0];
-  if (!f) return;
-  const preview = document.getElementById('scanPreview');
-  if (f.type.startsWith('image/')) {
-    const url = URL.createObjectURL(f);
-    preview.innerHTML = `<img src="${url}" style="max-width:100%;max-height:220px;border-radius:12px;" />`;
-  } else {
-    preview.innerHTML = `<div style="font-size:13px;color:var(--slate);">📄 ${escapeHTML(f.name)}</div>`;
-  }
-  processScanFile(f);
-  e.target.value = '';
-});
-
-document.getElementById('scanCancelBtn').addEventListener('click', () => {
-  document.getElementById('scanFormWrap').style.display = 'none';
-  document.getElementById('scanStatus').innerHTML = '';
-  document.getElementById('scanPreview').innerHTML = '';
-});
-
-document.getElementById('scanSaveBtn').addEventListener('click', () => {
-  const desc = document.getElementById('scanDesc').value.trim() || 'Factura escaneada';
-  const amount = parseFloat(document.getElementById('scanAmount').value);
-  const cat = document.getElementById('scanCat').value;
-  const date = document.getElementById('scanDate').value || todayISO();
-  if (!amount || amount <= 0) { alert('Revisa el monto, no puede estar vacío o en cero.'); return; }
-  state.expenses.unshift({ id: uid(), desc, amount, cat, date });
-  saveState(); renderExpenses();
-  document.getElementById('scanFormWrap').style.display = 'none';
-  document.getElementById('scanStatus').innerHTML = '';
-  document.getElementById('scanPreview').innerHTML = '';
-  celebrate('Gasto guardado desde factura 📎');
-});
-
-/* ========================
-   INIT
-   ======================== */
-loadState();
-updateHeader();
-renderTasks();
-renderExpenses();
-renderPayments();
-renderMarket();
-renderTravel();
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
-  });
-}
-</script>
-</body>
-</html>
+          <div class="metric-value" id="tra
