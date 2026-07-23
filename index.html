@@ -554,7 +554,7 @@
     <button class="tab active" data-tab="dashboard"><svg class="ico"><use href="#i-chart"></use></svg>Dashboard</button>
     <button class="tab" data-tab="tareas"><svg class="ico"><use href="#i-check"></use></svg>Tareas</button>
     <button class="tab" data-tab="gastos"><svg class="ico"><use href="#i-wallet"></use></svg>Gastos</button>
-    <button class="tab" data-tab="pagos"><svg class="ico"><use href="#i-calendar"></use></svg>Pagos del mes</button>
+    <button class="tab" data-tab="pagos"><svg class="ico"><use href="#i-calendar"></use></svg>Presupuesto</button>
     <button class="tab" data-tab="mercado"><svg class="ico"><use href="#i-cart"></use></svg>Mercado</button>
     <button class="tab" data-tab="notas"><svg class="ico"><use href="#i-note"></use></svg>Notas</button>
     <button class="tab" data-tab="recordatorios"><svg class="ico"><use href="#i-bell"></use></svg>Recordatorios</button>
@@ -695,6 +695,23 @@
   <!-- ===================== PAGOS ===================== -->
   <section class="panel" id="panel-pagos">
     <div class="card">
+      <h2><svg class="ico"><use href="#i-calendar"></use></svg>Presupuesto del mes</h2>
+      <p class="subtitle">Registra lo que te ingresa y tus pagos fijos, todo en un mismo lugar.</p>
+
+      <h2 style="margin-top: 4px;"><svg class="ico"><use href="#i-wallet"></use></svg>Ingresos</h2>
+      <p class="subtitle">Tus fuentes de ingreso de este mes: salario, extras, lo que recibas.</p>
+
+      <p style="font-size: 14px; color: var(--slate); margin-bottom: 16px;">Total de ingresos este mes: <b id="incomeTotal" style="color: var(--navy); font-family: 'Fraunces', serif; font-size: 18px;">$0</b></p>
+
+      <div class="input-row">
+        <input class="input" id="incomeName" type="text" placeholder="Ej: Salario, Freelance, Bono..." style="flex: 2;" />
+        <input class="input" id="incomeAmount" type="number" placeholder="Monto" min="0" step="1" style="flex: 0 1 130px;" />
+        <input class="input" id="incomeDay" type="number" placeholder="Día del mes (opcional)" min="1" max="31" style="flex: 0 1 170px;" />
+        <button class="btn" id="addIncomeBtn">Agregar ingreso</button>
+      </div>
+
+      <div id="incomeList" style="margin-bottom: 24px;"></div>
+
       <h2><svg class="ico"><use href="#i-calendar"></use></svg>Pagos mensuales</h2>
       <p class="subtitle">Tus pagos fijos organizados. Marca lo que ya pagaste, como en tu libreta pero digital.</p>
 
@@ -713,6 +730,11 @@
           <div class="metric-label">Pendiente</div>
           <div class="metric-value" id="payPending">$0</div>
           <div class="metric-hint" id="payPendingCount">0 pagos</div>
+        </div>
+        <div class="metric purple" id="budgetAvailableCard">
+          <div class="metric-label">Disponible</div>
+          <div class="metric-value" id="budgetAvailable">$0</div>
+          <div class="metric-hint">Ingresos - pagos comprometidos</div>
         </div>
       </div>
 
@@ -1026,6 +1048,7 @@ let state = {
   tasks: [],
   expenses: [],
   payments: [],
+  incomes: [],
   market: null,
   activeList: null,
   monthResetAt: null,
@@ -1085,6 +1108,7 @@ function loadState() {
   // migracion no destructiva: notas y recordatorios (secciones nuevas)
   state.notes = state.notes || [];
   state.reminders = state.reminders || [];
+  state.incomes = state.incomes || [];
 }
 function saveState() {
   try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
@@ -1964,6 +1988,8 @@ const CAT_PAY = {
   otros:         { emoji: '✨', name: 'Otros',               cls: 'cat-otros', color: '#5B5680' }
 };
 
+document.getElementById('addIncomeBtn').addEventListener('click', addIncome);
+
 document.getElementById('addPayBtn').addEventListener('click', () => document.getElementById('payModal').classList.add('on'));
 document.getElementById('pmCancel').addEventListener('click', () => document.getElementById('payModal').classList.remove('on'));
 document.getElementById('pmSave').addEventListener('click', savePayment);
@@ -2010,6 +2036,7 @@ function renderPayments() {
   const pct = total ? Math.round(paidTotal / total * 100) : 0;
   document.getElementById('payProgress').style.width = pct + '%';
   document.getElementById('payProgressLabel').textContent = pct + '%';
+  updateBudgetAvailable();
 
   const groups = {};
   state.payments.forEach(p => { (groups[p.cat] = groups[p.cat] || []).push(p); });
@@ -2084,6 +2111,74 @@ function editPayment(id) {
   if (newAmount === null) return;
   const n = parseFloat(newAmount);
   if (!isNaN(n) && n >= 0) { p.amount = n; saveState(); renderPayments(); }
+}
+
+/* ========================
+   INGRESOS (presupuesto)
+   ======================== */
+function addIncome() {
+  const nameInput = document.getElementById('incomeName');
+  const amountInput = document.getElementById('incomeAmount');
+  const dayInput = document.getElementById('incomeDay');
+  const name = nameInput.value.trim();
+  if (!name) return;
+  const amount = parseFloat(amountInput.value) || 0;
+  const dayVal = parseInt(dayInput.value);
+  const day = (dayVal >= 1 && dayVal <= 31) ? dayVal : null;
+  state.incomes.unshift({ id: uid(), name, amount, day, ts: Date.now() });
+  nameInput.value = ''; amountInput.value = ''; dayInput.value = '';
+  saveState();
+  renderIncomes();
+}
+
+function deleteIncome(id) {
+  state.incomes = state.incomes.filter(x => x.id !== id);
+  saveState();
+  renderIncomes();
+}
+
+// "Disponible" depende de ingresos Y pagos, asi que lo recalculan ambas
+// renderIncomes() y renderPayments() al final, para que siempre quede al dia
+// sin importar cual de las dos secciones se edito por ultimo.
+function updateBudgetAvailable() {
+  const incomeTotal = (state.incomes || []).reduce((s, i) => s + (i.amount || 0), 0);
+  const paymentsTotal = (state.payments || []).reduce((s, p) => s + (p.amount || 0), 0);
+  const available = incomeTotal - paymentsTotal;
+  const el = document.getElementById('budgetAvailable');
+  const card = document.getElementById('budgetAvailableCard');
+  if (el) el.textContent = fmt(available);
+  if (card) card.className = 'metric ' + (available < 0 ? 'pink' : 'purple');
+}
+
+function renderIncomes() {
+  const incomeTotal = (state.incomes || []).reduce((s, i) => s + (i.amount || 0), 0);
+  document.getElementById('incomeTotal').textContent = fmt(incomeTotal);
+
+  const wrap = document.getElementById('incomeList');
+  const incomes = state.incomes || [];
+  if (!incomes.length) {
+    wrap.innerHTML = `<div class="empty"><span class="empty-emoji">💰</span>Aún no registras ingresos este mes. Agrega el primero arriba.</div>`;
+  } else {
+    wrap.innerHTML = incomes.map(i => `
+      <div class="item" data-id="${i.id}">
+        <div class="item-body">
+          <div class="item-title">${escapeHTML(i.name)}</div>
+          <div class="item-meta">
+            ${i.day ? `<span class="day-badge">Día ${i.day}</span>` : ''}
+          </div>
+        </div>
+        <div class="amount">${fmt(i.amount)}</div>
+        <button class="del-btn" data-action="income-del">🗑️</button>
+      </div>
+    `).join('');
+
+    wrap.querySelectorAll('.item').forEach(el => {
+      const id = el.dataset.id;
+      el.querySelector('[data-action="income-del"]').addEventListener('click', () => deleteIncome(id));
+    });
+  }
+
+  updateBudgetAvailable();
 }
 
 /* ========================
@@ -2554,7 +2649,7 @@ document.getElementById('backupFile').addEventListener('change', (e) => {
       if (!state.market || !Object.keys(state.market).length) { const seeds = seedMarket(); state.market = {}; seeds.forEach(x => state.market[x.id] = x); state.activeList = seeds[0].id; }
       if (!state.activeList || !state.market[state.activeList]) state.activeList = Object.keys(state.market)[0];
       saveState();
-      renderTasks(); renderExpenses(); renderPayments(); renderMarket(); updateHeader();
+      renderTasks(); renderExpenses(); renderPayments(); renderIncomes(); renderMarket(); updateHeader();
       celebrate('Respaldo restaurado ✅');
     } catch (err) {
       alert('No se pudo leer el archivo. Asegurate de que sea un respaldo valido de Mi Dia (.json).');
@@ -2707,6 +2802,7 @@ loadState();
 updateHeader();
 renderTasks();
 renderExpenses();
+renderIncomes();
 renderPayments();
 renderMarket();
 renderTravel();
